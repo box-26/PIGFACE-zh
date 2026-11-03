@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +15,7 @@ using UGlyphRect = UnityEngine.TextCore.GlyphRect;
 
 namespace PigfaceCN
 {
-    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.0.0")]
+    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.6.0")]
     public class Plugin : BaseUnityPlugin
     {
         internal static BepInEx.Logging.ManualLogSource Log;
@@ -34,9 +34,10 @@ namespace PigfaceCN
             Directory.CreateDirectory(OutDir);
             Writer = new StreamWriter(Path.Combine(OutDir, "seen.txt"), true, new UTF8Encoding(false));
             Writer.AutoFlush = true;
-            Log.LogInfo("PigfaceCN v1.0 starting");
+            Log.LogInfo("PigfaceCN v1.6 starting");
 
             try { LoadDict(); } catch (Exception e) { Log.LogError("load dict: " + e); }
+            try { LoadAllow(); } catch (Exception e) { Log.LogError("load allow: " + e); }
 
             if (Dict != null && Dict.Count > 0)
             {
@@ -263,12 +264,61 @@ namespace PigfaceCN
         static readonly HashSet<string> MissSeen = new HashSet<string>();
         static StreamWriter MissWriter;
 
+        // Strings that are meant to stay English: proper nouns, brand-ish tokens.
+        // Maintained in BepInEx/PigfaceCN/allow.txt (one per line, # starts a comment).
+        static readonly HashSet<string> Allow = new HashSet<string>();
+
+        static void LoadAllow()
+        {
+            Allow.Clear();
+            string[] candidates =
+            {
+                Path.Combine(OutDir, "allow.txt"),
+                Path.Combine(Paths.BepInExRootPath, "plugins", "PigfaceCN", "allow.txt"),
+            };
+            foreach (string f in candidates)
+            {
+                if (!File.Exists(f)) continue;
+                foreach (string raw in File.ReadAllLines(f, Encoding.UTF8))
+                {
+                    string line = raw.Trim();
+                    if (line.Length == 0 || line[0] == '#') continue;
+                    Allow.Add(Norm(line));
+                }
+                Log.LogInfo("allow list loaded: " + Allow.Count + " entries");
+                return;
+            }
+            Log.LogInfo("allow list: none");
+        }
+
+        // Version strings, resolutions and technical acronyms are never translated,
+        // so logging them every session only buries the real gaps.
+        static bool LooksTechnical(string s)
+        {
+            string t = s.Trim();
+            if (t.Length == 0) return true;
+            if (System.Text.RegularExpressions.Regex.IsMatch(t, @"^\d+(\.\d+)?\s+\d+\s*bit$")) return true;
+            if (System.Text.RegularExpressions.Regex.IsMatch(t, @"^\d+\s*[x\u00d7]\s*\d+\s*\d+\s*Hz$")) return true;
+            int letters = 0;
+            bool allUpper = true;
+            for (int i = 0; i < t.Length; i++)
+            {
+                char c = t[i];
+                if (!char.IsLetter(c)) continue;
+                letters++;
+                if (char.IsLower(c)) { allUpper = false; break; }
+            }
+            return letters >= 2 && allUpper && t.Length <= 12;
+        }
+
         static void Miss(string path, string s)
         {
             if (string.IsNullOrEmpty(s) || s.Length < 3) return;
             bool letter = false;
             for (int i = 0; i < s.Length; i++) { char c = s[i]; if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { letter = true; break; } }
             if (!letter) return;
+            if (Allow.Count > 0 && Allow.Contains(Norm(s))) return;
+            if (LooksTechnical(s)) return;
             lock (MissSeen)
             {
                 if (!MissSeen.Add(s)) return;

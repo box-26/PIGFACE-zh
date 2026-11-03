@@ -72,6 +72,13 @@ dict/frag_master.tsv  片段规则，用于只替换一句话里的某个词
 改完跑 `python tools/check.py` 与 `python tools/build_dict.py` 即可验证。完整说明见
 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
+日常补漏词不用碰代码，两个 bat 就够：
+
+```
+1-收集漏词.bat   读游戏里的 miss.log，生成 待翻译.tsv（自动剔除人名与技术串）
+2-应用译文.bat   把填好的译文写回词库，重建词库并检查字体缺字
+```
+
 **这个项目欢迎任何人接手维护**：Fork 之后自己改、自己发版即可，不需要作者同意，
 也不必把改动合并回来（MIT 允许）。作者不在了，这份代码也照样能继续被维护。
 
