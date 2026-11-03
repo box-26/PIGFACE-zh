@@ -132,6 +132,9 @@ if ((Test-Path $dll) -and (Test-Path $dict)) {
     Write-Host "  安装成功！" -ForegroundColor Green
     Write-Host "  以后从 Steam 正常启动游戏就是中文了。" -ForegroundColor Green
     Write-Host ""
+    Write-Host "  项目主页：https://github.com/box-26/PIGFACE-zh" -ForegroundColor Cyan
+    Write-Host "  漏翻/错译请到上面的 Issues 反馈，附 miss.log 与 LogOutput.log。" -ForegroundColor DarkGray
+    Write-Host ""
     $ans = Read-Host "  现在启动游戏看看？(Y/N)"
     if ($ans -match '^(y|Y)') { Start-Process (Join-Path $game 'Pigface.exe') }
 } else {
