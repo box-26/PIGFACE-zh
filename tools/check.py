@@ -51,6 +51,11 @@ def main():
             if re.search(r"[\u4e00-\u9fff]", key):
                 errors.append("%s: key already contains Chinese: %r" % (name, key))
 
+            # A scene path in the value means a spreadsheet edit slipped an
+            # extra column ("where it was found") into the translation.
+            if re.search(r"(cutscene/|PLAYER CONTROLLER/|/hud/|/canvas/|/dialogue$)", val):
+                errors.append("%s: %r has a scene path as translation: %r" % (name, key, val))
+
             for tag in TAGS:
                 # <sprite name="..."> is self-closing in TMP text, so it has no </sprite>.
                 if tag in ("br", "sprite"):
