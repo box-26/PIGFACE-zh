@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Build the bundled font subset (font.ttf) from a full CJK font.
+
+Only the characters that actually appear in the dictionary and the fragment
+rules are kept, which shrinks a 16 MB OTF to roughly 470 KB.
+
+    pip install fonttools
+    python tools/make_font.py --font NotoSansCJKsc-Regular.otf --out font.ttf
+
+The result is redistributed under SIL OFL 1.1 together with OFL.txt;
+do not delete that file from the release package.
+"""
+import argparse
+import io
+import os
+import sys
+
+from fontTools import subset
+
+PUNCT = "\u3000\u3001\u3002\uff0c\uff1b\uff1a\uff1f\uff01\u201c\u201d\u2018\u2019" \
+        "\uff08\uff09\u300a\u300b\u3010\u3011\u2026\u2014\u00b7\u300c\u300d\u300e\u300f" \
+        "\u00b7\u2014\u2026\u3002\uff0c"
+
+
+def collect_chars(paths):
+    chars = set()
+    for path in paths:
+        if not os.path.exists(path):
+            continue
+        with io.open(path, encoding="utf-8") as fh:
+            for line in fh:
+                if "\t" not in line:
+                    continue
+                _, value = line.rstrip("\n").split("\t", 1)
+                for ch in value:
+                    if ch not in "\r\n\t":
+                        chars.add(ch)
+    for code in range(32, 127):
+        chars.add(chr(code))
+    chars.update(PUNCT)
+    return chars
+
+
+def main():
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--font", required=True, help="full OTF/TTF, e.g. NotoSansCJKsc-Regular.otf")
+    ap.add_argument("--out", default=os.path.join(here, "font.ttf"))
+    ap.add_argument("--dict", nargs="*",
+                    default=[os.path.join(here, "out", "zh.tsv"),
+                             os.path.join(here, "out", "frag.tsv")])
+    args = ap.parse_args()
+
+    chars = collect_chars(args.dict)
+    text = "".join(sorted(chars))
+    if not text:
+        sys.exit("no characters collected - run tools/build_dict.py first")
+
+    opts = subset.Options()
+    opts.layout_features = ["*"]
+    opts.hinting = False
+    opts.desubroutinize = True
+    opts.drop_tables += ["DSIG"]
+    opts.name_IDs = ["*"]
+
+    font = subset.load_font(args.font, opts)
+    sub = subset.Subsetter(options=opts)
+    sub.populate(text=text)
+    sub.subset(font)
+    subset.save_font(font, args.out, opts)
+    font.close()
+
+    print("characters: %d -> %s (%d bytes)" % (len(chars), args.out, os.path.getsize(args.out)))
+
+
+if __name__ == "__main__":
+    main()

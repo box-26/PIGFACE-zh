@@ -1,0 +1,28 @@
+# generated / build output
+out/
+history/
+bin/
+obj/
+*.zip
+*.dll
+*.pdb
+
+# runtime logs and dumps produced by the plugin
+LogOutput.log
+miss.log
+seen.txt
+debug.flag
+dump_*.txt
+dump_*.png
+atlas.raw
+
+# local game files or copies (never commit the game itself)
+PIGFACE-zh/
+Pigface_Data/
+Pigface.exe
+
+# editor / OS noise
+.vs/
+.vscode/
+Thumbs.db
+desktop.ini

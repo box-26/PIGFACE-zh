@@ -1,0 +1,17 @@
+译文（dict/ 与 frag/ 下的词库）采用：
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+(CC BY-NC-SA 4.0)
+
+完整法律文本：https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+简单说：
+
+- 署名（BY）：转载或改编时请标注来源（本项目仓库地址）。
+- 非商业（NC）：不得用于商业用途，包括售卖、付费下载、放进付费整合包。
+- 相同方式共享（SA）：改编后的词库必须以同样的 CC BY-NC-SA 4.0 发布。
+
+为什么代码是 MIT、译文是 CC BY-NC-SA：
+游戏对白与文本的著作权属于游戏作者。译文是对这些文本的演绎，
+因此额外附加“非商业 + 相同方式共享”，避免给原作者的权益带来麻烦。
+
+如果你只想用代码、不需要词库，仅受 MIT 约束。
