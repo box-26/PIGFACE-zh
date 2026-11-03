@@ -4,16 +4,6 @@
 
   项目主页（更新、补译、问题反馈都在这里）
   https://github.com/box-26/PIGFACE-zh
-
-  遇到漏翻、错译、乱码：
-  1) 打开上面的 Issues 页面，新建一条
-  2) 附上游戏目录里这两个文件：
-     BepInEx\PigfaceCN\miss.log        （记录没翻译的句子）
-     BepInEx\LogOutput.log             （记录补丁有没有正常加载）
-  3) 有截图更好
-
-  这个补丁是免费发布的。如果你是在任何平台上“花钱买的”，
-  直接去平台申请退款，并把卖家信息贴在 Issues 里。
 ================================================================
 
 
@@ -147,8 +137,9 @@
  7. 使用风险自负。因与其他 Mod 冲突、游戏更新、系统环境差异
     导致的问题，作者不承担任何责任。
 
- 8. 问题反馈请附：BepInEx\PigfaceCN\miss.log（没翻到的原文）
-    与 BepInEx\LogOutput.log（启动日志）。
+ 8. 问题反馈：到项目主页的 Issues 里新建一条，附上
+    BepInEx\PigfaceCN\miss.log（没翻到的原文）与
+    BepInEx\LogOutput.log（启动日志），有截图更好。
 
 
 六、文件清单
@@ -165,7 +156,7 @@
   BepInEx\core\         BepInEx 本体
   BepInEx\plugins\PigfaceCN\
       PigfaceCN.dll     汉化主程序
-      zh.tsv            词库（938 条）
+      zh.tsv            词库（948 条）
       frag.tsv          片段规则（131 条）
       sold.png          “售罄”贴图
       font.ttf          内置中文字体（备用）
