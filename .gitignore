@@ -30,3 +30,7 @@ desktop.ini
 # translation work sheet (local, per-user)
 Д§З­вы.tsv
 
+
+# generated at install time (machine-specific path)
+game_path.txt
+
