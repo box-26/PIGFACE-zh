@@ -1,14 +1,8 @@
-# 故意保持英文的词（一行一个，# 开头是注释）。
+﻿# 故意保持英文的词（一行一个，# 开头是注释）。
 # 作用：这些词不会被写进 miss.log，避免真正的漏词被淹没。
 # 注意：这里只影响“缺口日志”，不影响翻译本身——如果词库里也有同一句，照样会翻。
 
-# 人名 / 代号
-Caesar
-Caesar?
-Exit
-Trevor Fish
-Bubba
-Dela
+# 制作名单里的真人姓名（只出现在 credits，不翻译）
 crisp
 Ethan Birch
 Jackson Henderson

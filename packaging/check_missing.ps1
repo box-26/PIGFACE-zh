@@ -63,7 +63,6 @@ if (-not $GamePath) {
 $miss = Join-Path $GamePath 'BepInEx\PigfaceCN\miss.log'
 $dict = Join-Path $GamePath 'BepInEx\plugins\PigfaceCN\zh.tsv'
 if (-not (Test-Path $dict)) { $dict = Join-Path $GamePath 'BepInEx\PigfaceCN\zh.tsv' }
-$exe  = Join-Path $GamePath 'Pigface.exe'
 
 $ver = 'unknown'
 $vf = Join-Path $PSScriptRoot 'VERSION.txt'
@@ -79,6 +78,47 @@ try {
     }
 } catch { }
 
+# ---- 环境信息（只取不含隐私的项）----
+$osLine = 'Windows (unknown)'
+try {
+    $osv = [System.Environment]::OSVersion.Version
+    $cap = ''
+    try { $cap = (Get-CimInstance Win32_OperatingSystem -ErrorAction Stop).Caption } catch { $cap = 'Windows' }
+    $osLine = "$cap $($osv.Major).$($osv.Minor).$($osv.Build) [$env:PROCESSOR_ARCHITECTURE]"
+} catch { }
+
+$resLine = 'unknown'
+try {
+    Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
+    $vs = [System.Windows.Forms.SystemInformation]::VirtualScreen
+    $resLine = "$($vs.Width)x$($vs.Height)"
+} catch { }
+
+$fontLine = 'unknown'
+$log = Join-Path $GamePath 'BepInEx\LogOutput.log'
+if (Test-Path $log) {
+    $m = [regex]::Match((Get-Content -LiteralPath $log -Raw -Encoding UTF8), 'font:\s*([^\r\n]+)')
+    if ($m.Success) { $fontLine = $m.Groups[1].Value.Trim() }
+}
+
+$others = @()
+$pd = Join-Path $GamePath 'BepInEx\plugins'
+if (Test-Path $pd) {
+    $others = @(Get-ChildItem -LiteralPath $pd -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -ne 'PigfaceCN' } | ForEach-Object { $_.Name })
+}
+$otherLine = if ($others.Count -eq 0) { '无' } else { "$($others.Count) 个（$($others -join ', ')）" }
+
+$avLine = 'unknown'
+try {
+    $av = @((Get-CimInstance -Namespace 'root\SecurityCenter2' -ClassName AntiVirusProduct -ErrorAction Stop).displayName)
+    if ($av.Count -eq 0) { $avLine = '未检测到' } else { $avLine = ($av -join ', ') }
+} catch { $avLine = '无法读取' }
+
+$flagCjk = if ($GamePath -match '[\u4e00-\u9fff]') { '是' } else { '否' }
+$flagSpc = if ($GamePath.Contains(' ')) { '是' } else { '否' }
+$flagPf  = if ($GamePath -like '*\Program Files*') { '是' } else { '否' }
+
+# ---- 读 miss.log ----
 $entries = @()
 if (Test-Path $miss) {
     foreach ($ln in [System.IO.File]::ReadAllLines($miss, [System.Text.Encoding]::UTF8)) {
@@ -96,17 +136,37 @@ foreach ($e in $entries) {
     $byText[$t].n = $byText[$t].n + 1
 }
 
+# ---- 生成报告 ----
 $out = New-Object System.Collections.Generic.List[string]
 $out.Add('PIGFACE 简体中文汉化 - 缺词报告')
 $out.Add('====================================================')
+$out.Add('')
+$out.Add('【这份报告包含什么】')
+$out.Add('  Windows 版本与位数、屏幕分辨率、补丁版本与词库条数、游戏 Steam buildid、')
+$out.Add('  插件实际加载的字体、是否装了其它 BepInEx 插件、杀毒软件产品名（只读取名字）、')
+$out.Add('  漏翻句子的原文，以及它出现在哪个界面。')
+$out.Add('')
+$out.Add('【这份报告不包含什么】')
+$out.Add('  你的用户名、电脑名、IP/MAC 地址、Steam 账号、邮箱、游戏完整路径、存档内容。')
+$out.Add('  安装位置只记录三个“是/否”：路径含中文、含空格、在 Program Files。')
+$out.Add('')
+$out.Add('【发不发都行】')
+$out.Add('  发出来能帮作者补词；不发也不影响补丁正常使用，删掉本文件即可。')
+$out.Add('')
+$out.Add('----------------------------------------------------')
 $out.Add("补丁版本：v$ver（词库 $dictCount 条）")
 $out.Add("游戏版本：$gameVer")
 $out.Add("生成时间：" + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))
-$out.Add("游戏路径：$GamePath")
+$out.Add("系统：$osLine")
+$out.Add("分辨率：$resLine")
+$out.Add("字体：$fontLine")
+$out.Add("其它 BepInEx 插件：$otherLine")
+$out.Add("杀毒软件：$avLine")
+$out.Add("安装位置：路径含中文=$flagCjk，含空格=$flagSpc，在 Program Files=$flagPf")
 $out.Add("记录条数：$($entries.Count) 条（去重后 $($byText.Count) 条）")
 $out.Add('')
-$out.Add('说明：这里只记录"插件真的没翻出来"的句子，已排除人名（allow.txt）')
-$out.Add('      与版本号/分辨率等技术串，所以不会有误报。')
+$out.Add('说明：这里只记录“插件真的没翻出来”的句子。人名（allow.txt）和技术串')
+$out.Add('      （版本号、分辨率、SSAO/FPS）已被排除，正常情况下不会有误报。')
 $out.Add('')
 if ($byText.Count -eq 0) {
     $out.Add('恭喜：这次没有发现漏翻的句子。')
@@ -123,18 +183,19 @@ $out.Add('')
 $out.Add('---- 原始 miss.log ----')
 foreach ($e in $entries) { $out.Add("$($e[0])`t$($e[1])") }
 
-$save = Join-Path $PSScriptRoot 'missing_report.txt'
+$save = Join-Path $PSScriptRoot '缺词报告.txt'
 try {
     [System.IO.File]::WriteAllLines($save, $out, (New-Object System.Text.UTF8Encoding($true)))
 } catch {
-    $save = Join-Path $GamePath 'BepInEx\PigfaceCN\missing_report.txt'
+    $save = Join-Path $GamePath 'BepInEx\PigfaceCN\缺词报告.txt'
     [System.IO.File]::WriteAllLines($save, $out, (New-Object System.Text.UTF8Encoding($true)))
 }
 
 Write-Host ''
 Write-Host ("  补丁 v" + $ver + "，词库 " + $dictCount + " 条") -ForegroundColor DarkGray
 Write-Host ("  发现 " + $byText.Count + " 条没翻译的句子") -ForegroundColor Cyan
-Write-Host ("  报告已保存：" + $save) -ForegroundColor Green
-Write-Host '  把这个文件发到 GitHub Issues 即可。' -ForegroundColor DarkGray
-try { Start-Process explorer.exe -ArgumentList ('/select,"' + $save + '"') } catch { }
+Write-Host ("  报告已保存到：" + $save) -ForegroundColor Green
+Write-Host '  路径已复制到剪贴板，可以直接粘贴发出去。' -ForegroundColor DarkGray
+Write-Host '  报告不含用户名、电脑名、完整路径等隐私信息；不发也不影响使用。' -ForegroundColor DarkGray
+try { Set-Clipboard -Value $save } catch { }
 Read-Host '  按回车关闭'

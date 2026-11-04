@@ -143,7 +143,7 @@ move horizontal	水平移动
 some time later	过了一会儿
 throttle 1 down	油门 1 向下
 throttle 2 down	油门 2 向下
-we've got exit.	我们找到 Exit 了。
+we've got exit.	我们找到艾柯赛特了。
 whammy bar down	摇把向下
 blueprint found	发现蓝图
 files collected	文件已收集
@@ -174,7 +174,7 @@ rotate yoke right	右转操纵杆
 target eliminated	目标已清除
 [door slam sound]	[摔门声]
 [drilling sounds]	[钻孔声]
-exit turn to look	Exit，转过去看看
+exit turn to look	艾柯赛特，转过去看看
 file folder found	找到文件夹
 hospital bills -$	医疗费 -$
 junk shield broke	废料护盾碎了
@@ -215,7 +215,7 @@ switch to active mode	切换到主动模式
 youre a fucking idiot	你个蠢货
 i didn't see anything.	我什么都没看见。
 [skull breaking sound]	[头骨碎裂声]
-eliminate "killswitch"	干掉"断电开关"
+eliminate "killswitch"	干掉「断路器」
 kill dudes with spikes	用尖刺弄死那帮人
 not enough components!	零件不够！
 >> this is an objective	>> 这是一个任务目标
@@ -255,7 +255,7 @@ player options data saved!	玩家选项数据已保存！
 we've got the van waiting.	面包车在等着了。
 (optional) kill all yuppies	（可选）杀光所有雅皮士
 a place they take materials	一个他们运材料的地方
-call themselves "jumpsuits"	他们自称"连体服"
+call themselves "jumpsuits"	他们自称「连体服」
 earpiece comfortable? good.	耳机舒服吗？很好。
 destroy 3 drug-lab stations	摧毁 3 个制毒工位
 kill the target in the barn	在谷仓里干掉目标
@@ -283,7 +283,7 @@ who knows! that's how it goes!	谁知道呢！就这样吧！
 kill target in the parking lot	在停车场干掉目标
 kill target in the prison yard	在监狱操场干掉目标
 kill the warden in the showers	在淋浴间干掉狱长
-i like watching you work, exit.	我喜欢看你干活，Exit。
+i like watching you work, exit.	我喜欢看你干活，艾柯赛特。
 just check the note over there.	去看看那边的便条。
 yeah, no reservations about it.	是啊，一点不犹豫。
 deals 200 damage in a 6m radius	6 米范围内造成 200 点伤害
@@ -291,7 +291,7 @@ deals 400 damage in a 4m radius	4 米范围内造成 400 点伤害
 good work. head back to the van.	干得漂亮。回面包车吧。
 i don't think it's unreasonable.	我觉得这不算过分。
 now i need you to find a weapon.	现在我需要你去找把武器。
-eliminate "bon-bon" in the suite	在套房里干掉"棒棒糖"
+eliminate "bon-bon" in the suite	在套房里干掉「棒棒糖」
 kill target near the dance floor	在舞池附近干掉目标
 kill target patrolling the sewer	干掉在下水道巡逻的目标
 kill the target in the farmhouse	在农舍里干掉目标
@@ -344,7 +344,7 @@ we looked at the documents you retrieved	我们看了你取回的文件
 we're sending you there with explosives.	我们会带着炸药送你过去。
 when i was digging around in your brain,	我在你脑子里翻找的时候，
 no clips! you're outta clips! you ninny!	没弹夹了！你没弹夹了！你这笨蛋！
-(optional) eliminate all jumpsuit members	（可选）干掉所有连体服成员
+(optional) eliminate all jumpsuit members	（可选）干掉所有连体服帮成员
 (optional) kill enemies with melee damage	（可选）用近战伤害干掉敌人
 rich kids that like shiny explosive toys.	喜欢亮闪闪爆炸玩具的富家子弟。
 when you're ready to go, step in the van.	准备好了就上面包车。
@@ -443,7 +443,7 @@ if it feels like something's been implanted at the base of your skull,	如果你
 when you're all set, break down this door, and head to your real test.	准备好了就破开这扇门，去你真正的测试。
 insta-kill enemies that step on it, 25% chance to break when triggered	踩上去的敌人直接毙命，触发后有 25% 几率损坏
 your standard-issue illegally imported firearm. reliable and hits hard.	标准配发的非法进口枪械。可靠，打得狠。
-in the documents you found, there's evidence of trade with the jumpsuits	在你找到的文件里，有和"连体服"交易的证据
+in the documents you found, there's evidence of trade with the jumpsuits	在你找到的文件里，有和「连体服」交易的证据
 thank you for playing the pigface demo! would you like to keep playing?	感谢试玩 PIGFACE 演示版！\n\n你想继续玩吗？
 is it a baseball or a skull that owes you money? wood never discriminates.	欠你钱的是棒球还是脑袋？木头从不挑食。
 looks like they've taken residence in one of the city's old rail stations.	看来他们住进了城里一个旧火车站。
@@ -495,13 +495,13 @@ pigface is still early in development. this version does not represent the final
 do not touch if you wish to request medical supplies, get permission from your superior if you're already high rank, just don't be a fuckin' junkie - dj	别碰\n\n要申请药品，先找你上级批准\n\n如果你已经是高层，那就别他妈当个瘾君子\n\n- DJ
 y'know it's not so bad free room and board, i can get high literally whenever i want, no parents bitchin at me it's pretty fuckin great man never going back	你知道吗，其实还不错\n\n包吃包住，想嗨随时能嗨，没爸妈唠叨\n\n真他妈爽，哥们\n\n再也不回去了
 requisition form - electrical scrap x10 - adhesive x12 - metal parts x40 p.s., if you can throw in some extra wire it'd really speed up this antenna bullshit thanks	申领单\n\n- 电子废料 x10\n- 胶水 x12\n- 金属零件 x40\n\n附：要是能多给点电线，这破天线的活儿能快不少\n\n谢了
-we've got confirmation on the yuppies rendezvous scheduled later this month, uptown-ways they're asking for pre-made turrets let's not put all our eggs in one basket, eh? - tink	确认了雅皮士的消息\n\n碰头会定在这个月晚些时候，在上城那边\n\n他们要现成的炮塔\n\n别把鸡蛋放一个篮子里，嗯？\n\n- 叮当
+we've got confirmation on the yuppies rendezvous scheduled later this month, uptown-ways they're asking for pre-made turrets let's not put all our eggs in one basket, eh? - tink	确认了雅皮士帮的消息\n\n碰头会定在这个月晚些时候，在上城那边\n\n他们要现成的炮塔\n\n别把鸡蛋放一个篮子里，嗯？\n\n- 叮当
 so my thinking is that if we can get a patio chair up here, we can tape up some canisters to it then all we need are some electronics and like a helmet and boom baby fuckin rocket chair	我的想法是，要是能弄把露台椅上这儿来，往上面绑几个罐子\n\n然后只要些电子件和一个头盔之类的\n\n轰，宝贝\n\n他妈的火箭椅
-notice once you are done watching any movies in here, please put them back into their appropriate case once you are done watching "special" movies, please clean up after yourself thanks	告示\n\n看完这里的片子后，请放回对应的盒子里\n\n看完"特殊"片子后，请自行清理\n\n谢谢
+notice once you are done watching any movies in here, please put them back into their appropriate case once you are done watching "special" movies, please clean up after yourself thanks	告示\n\n看完这里的片子后，请放回对应的盒子里\n\n看完「特殊」片子后，请自行清理\n\n谢谢
 attention we're having some supply issues, food will have to be rationed while we secure connections from another city hang in there, won't be long now til this is all over anyways - dj	注意\n\n我们有些供应问题，在打通另一个城市的渠道前，食物得配给\n\n撑住，反正离这一切结束不远了\n\n- DJ
 if the light starts blinking, stop fucking touching it we already lost like 3 dudes to this if we want to corner the market on these things, we gotta stop blowing ourselves up kapeesh? - ks	如果灯开始闪，就他妈别碰了\n\n我们已经有大概 3 个兄弟栽在这上面\n\n想垄断这玩意儿的市场，就得先别把自己炸了\n\n懂吗？\n\n- ks
 september batch notes - some shakes - dizziness & nausea - one case of a dude going completely numb for 4 days* *fell off of roof last week, could be related think we're good to ship, need sign off	九月批次\n\n记录\n- 有些发抖\n- 头晕恶心\n- 一例连续四天完全麻木*\n\n*上周从屋顶摔下来，可能有关\n\n我觉得可以出货了，需要签字
-maybe prison wasn't so bad couple meals a day work out in the yard read some books... now i gotta live in the buttguy house and "guard" the entrance what's the damn point, there's nothin fuckin here	也许监狱也没那么糟\n\n一天几顿饭\n在院子里锻炼\n看看书……\n\n现在我得住在屁眼佬的房子里"守"门\n\n图什么，这儿他妈什么都没有
+maybe prison wasn't so bad couple meals a day work out in the yard read some books... now i gotta live in the buttguy house and "guard" the entrance what's the damn point, there's nothin fuckin here	也许监狱也没那么糟\n\n一天几顿饭\n在院子里锻炼\n看看书……\n\n现在我得住在屁眼佬的房子里「守」门\n\n图什么，这儿他妈什么都没有
 clear out some junkies who've decided to squat. expect a ragtag group of nobodies that like to place traps and tripwires. <br><br>keep in mind, remixed jobs are more ... improvisational. i'll update your objectives when you get there.	清掉一帮占房的瘾君子。预计是一群乌合之众，喜欢布置陷阱和绊线。<br><br>记住，变奏模式的活儿更……即兴。到了那儿我会更新你的目标。
 whole fucking mall to ourselves, loaded with old clothes, and guess what? we can't fucking wear em! tink and tail say it's for our safety, don't want to get shot when not in uniform shit's starting to feel like prison all over again...	整座他妈的商场都是我们的，堆满了旧衣服，你猜怎么着？\n\n我们他妈不能穿！\n\n叮当和尾巴说是为了我们的安全，不穿制服容易挨枪\n\n这感觉又开始像坐牢了……
 hey chef man look we love the food and all but some of were wondering if any of what you've been making contained cat? it's not a problem really but it's just that some of us are allergic, so maybe cut down on the domesticated animals thx	嘿，厨师老哥\n\n我们是很爱你做的饭，但有些人想知道你做的东西里有没有猫肉？\n\n其实也不算问题，只是我们有些人过敏，所以少用点家养动物\n\n谢了
@@ -548,7 +548,7 @@ morphine (x3)	吗啡 (x3)
 bear traps (x6)	捕兽夹 (x6)
 pills picked up	拾取药片
 subway job accepted	已接取地铁任务
->> kill "bon-bon"	>> 干掉"邦邦"
+>> kill "bon-bon"	>> 干掉「糖果」
 » kill dudes with fire	» 用火烧死混混
 » survive for 4 minutes	» 存活 4 分钟
 >> survive for 4 minutes	>> 存活 4 分钟
@@ -581,11 +581,11 @@ you already have a few outfits you can select from the mirror later on, you will
 this is your crafting station find <b>blueprints and components during jobs</b> to up your supply of meds and unlock special pieces of equipment	这是你的制作台\n\n出任务时留意<b>蓝图和零件</b>，用来补充药品、解锁特殊装备
 your laptop is where you select jobs and purchase equipment the world map displays available jobs, and bubba's supply has equipment <b>make sure you select a job before leaving!</b>	笔记本电脑用来接任务和买装备\n\n世界地图上列着可接的任务，布巴补给站里卖装备\n\n<b>出门前记得先选一个任务！</b>
 the pills on the table here make killing dudes <b>heal a bit of your health</b> and that shield will <b>block all ranged damage</b> from the front when equippped, and from the back when it's not keep in mind that after it soaks up a bunch of bullets, <b>it'll break!</b>	桌上的药片能让你杀人的时候<b>回一点血</b>\n\n那块盾牌装备时能<b>挡住正面所有远程伤害</b>，不装备时挡背面\n\n记住，它扛下一堆子弹之后<b>会碎！</b>
-derelict farmhouse somewhere outside the city, currently occupied by a group calling themselves "the smilers" orders are to find a sample of their drugs, some folders containing information about their other hideouts, and to kill as many of them as you can there's a fat bonus in it for you if you can kill all of them	城外某处的废弃农舍，最近被一伙自称"笑脸"的人占了。\n\n命令是找到他们的毒品样本、几份记录他们其他藏身点的文件夹，并尽可能多杀掉他们。\n\n如果能把他们全杀光，还有一笔丰厚的奖金。
-sup exit, the name's trevor fish. you can call me fishy-t, fishsticks, whatever. i've got a little program i make for the internet, it's called the meatshow! i'd be super stoked if you joined as a contestant, we've got a big cash prize and some neat goodies to give away. lemme know if you're down! peace and love, bro.	嗨，Exit，我叫特雷弗·菲什。你可以叫我鱼哥、鱼条，随便。\n\n我在网上做了个小节目，叫《肉秀》！\n\n你要是来当选手我超兴奋，有大笔现金奖励和不少好东西。\n\n想来的话说一声！爱你，兄弟。
+derelict farmhouse somewhere outside the city, currently occupied by a group calling themselves "the smilers" orders are to find a sample of their drugs, some folders containing information about their other hideouts, and to kill as many of them as you can there's a fat bonus in it for you if you can kill all of them	城外某处的废弃农舍，最近被一伙自称「笑脸」的人占了。\n\n命令是找到他们的毒品样本、几份记录他们其他藏身点的文件夹，并尽可能多杀掉他们。\n\n如果能把他们全杀光，还有一笔丰厚的奖金。
+sup exit, the name's trevor fish. you can call me fishy-t, fishsticks, whatever. i've got a little program i make for the internet, it's called the meatshow! i'd be super stoked if you joined as a contestant, we've got a big cash prize and some neat goodies to give away. lemme know if you're down! peace and love, bro.	嗨，艾柯赛特，我叫特雷弗·菲什。你可以叫我鱼哥、鱼条，随便。\n\n我在网上做了个小节目，叫《肉秀》！\n\n你要是来当选手我超兴奋，有大笔现金奖励和不少好东西。\n\n想来的话说一声！爱你，兄弟。
 create your loadout by cycling through your owned equipment with the <b>red buttons</b> if you have attachments for guns, <b>they will show up on the gun itself, and you will have to interact with them to use them</b> if you want to know the stats of items, read about them on their respective screen <b>interact with the van door when you're done</b>	用<b>红色按钮</b>在已拥有的装备之间切换来搭配配装\n\n如果你有枪械配件，<b>它们会显示在枪上，你得跟它们交互才能装上</b>\n\n想知道物品属性，就在各自的屏幕上读说明\n\n<b>配好后跟面包车后门交互</b>
-we traced the rest of the smilers to an old train station. looks like this is the supply chain link we should sever. we're going to pack you up with some explosives and send you there to destroy their munitions and drug supplies. oh, we also learned of this freak called chef. he has a penchant for cutting up anything with a pulse and trying to cook it. eliminate him for a bonus.	我们追查到「笑脸」剩下的人躲在一个旧火车站。看来该切断这条供货链了。\n\n我们会给你带上炸药，把你送过去炸掉他们的弹药和毒品补给。\n\n对了，我们还查到有个叫「厨师」的疯子，特别喜欢把任何还有脉搏的东西切了拿去煮。干掉他有奖金。
-an abandoned motel that was occupied by some squatters up until recently. says in the files you retrieved from the farmhouse that this place belongs to "bon-bon", whoever that is from the outside, this motel seems to be a lily-pad. the smilers ferry drugs from the motel into the city, though we're unsure if drugs are produced there, too whatever the case may be, your orders are to destroy any and all drug-related equipment, to find information that'll reveal more about their places of operation, and to kill "bon-bon"	一间废弃汽车旅馆，直到最近还被一群占房的人住着。从农舍拿到的文件里说，这地方属于"邦邦"，谁知道那是谁。\n\n从外面看，这旅馆像片荷叶。笑脸的人把毒品从旅馆运进城里，不过我们不确定毒品是不是也在那儿生产。\n\n不管怎样，命令是摧毁所有和毒品有关的设备、找到能暴露他们更多据点位置的信息，并干掉"邦邦"。
+we traced the rest of the smilers to an old train station. looks like this is the supply chain link we should sever. we're going to pack you up with some explosives and send you there to destroy their munitions and drug supplies. oh, we also learned of this freak called chef. he has a penchant for cutting up anything with a pulse and trying to cook it. eliminate him for a bonus.	我们追查到笑脸帮剩下的人躲在一个旧火车站。看来该切断这条供货链了。\n\n我们会给你带上炸药，把你送过去炸掉他们的弹药和毒品补给。\n\n对了，我们还查到有个叫「厨师」的疯子，特别喜欢把任何还有脉搏的东西切了拿去煮。干掉他有奖金。
+an abandoned motel that was occupied by some squatters up until recently. says in the files you retrieved from the farmhouse that this place belongs to "bon-bon", whoever that is from the outside, this motel seems to be a lily-pad. the smilers ferry drugs from the motel into the city, though we're unsure if drugs are produced there, too whatever the case may be, your orders are to destroy any and all drug-related equipment, to find information that'll reveal more about their places of operation, and to kill "bon-bon"	一间废弃汽车旅馆，直到最近还被一群占房的人住着。从农舍拿到的文件里说，这地方属于「糖果」，谁知道那是谁。\n\n从外面看，这旅馆像片荷叶。笑脸帮的人把毒品从旅馆运进城里，不过我们不确定毒品是不是也在那儿生产。\n\n不管怎样，命令是摧毁所有和毒品有关的设备、找到能暴露他们更多据点位置的信息，并干掉糖果。
 sold out	售罄
 hammer	锤子
 wrench	扳手
@@ -628,7 +628,7 @@ urban_plaza	城市广场
 warehouse	仓库
 suburbs	郊区
 subway	地铁
-Turns out those Smilers weren't smart enough to make their own explosives. Go figure. \n\nFrom what clean-up found at the train station, the Smilers have some ties to another gang called the Jumpsuits. \n\nAnyways, we're sending you to one of their recent spots; a quiet suburb that they took over and trashed. \n\nOrders are to find the schematics for the landmines they're making, and to eliminate a guy called Killswitch. He seems to be one of their ringleaders. If you manage to kill everyone there, you'll get a bonus.	看来那些笑脸笨到连炸药都得自己做。真是想不到。\n\n从火车站清理现场找到的东西看，笑脸和另一个叫「连体服」的帮派有来往。\n\n总之，我们派你去他们最近拿下的一个据点；一片被他们占了、糟蹋过的安静郊区。\n\n命令是：找到他们造地雷的图纸，干掉一个叫「断电」的家伙。他像是头目之一。要是你把那儿的人全杀了，有额外奖金。
+Turns out those Smilers weren't smart enough to make their own explosives. Go figure. \n\nFrom what clean-up found at the train station, the Smilers have some ties to another gang called the Jumpsuits. \n\nAnyways, we're sending you to one of their recent spots; a quiet suburb that they took over and trashed. \n\nOrders are to find the schematics for the landmines they're making, and to eliminate a guy called Killswitch. He seems to be one of their ringleaders. If you manage to kill everyone there, you'll get a bonus.	看来那些笑脸帮的人笨到连炸药都得自己做。真是想不到。\n\n从火车站清理现场找到的东西看，笑脸帮和连体服帮有来往。\n\n总之，我们派你去他们最近拿下的一个据点；一片被他们占了、糟蹋过的安静郊区。\n\n命令是：找到他们造地雷的图纸，干掉一个叫「断电」的家伙。他像是头目之一。要是你把那儿的人全杀了，有额外奖金。
 no_gun	无枪械
 no_meds	无药品
 story	剧情模式
@@ -676,7 +676,7 @@ find computers in the offices	在办公室里找电脑
 eliminate the cleaner	干掉清洁工
 eliminate the yuppie	干掉雅皮士
 eliminate the warden	干掉典狱长
-we found the jumpsuits hq. fair warning, it looks a hell of a lot different from what you'll remember. job's simple. eliminate three targets, then get out. your first is the warden, i guess he's the turncoat that runs the joint. he'll be in the laundry room. your second is some rep from a group of uptown yuppie dealers. i think they're looking for an alliance. they're in the downstairs lounge. your third is one of our own. upstairs, private room. kill him. if you have the time, i'd like you to grab some of the high-end product that the yuppies must've brought downtown. i'm eager to see what all the fuss is about.	我们找到连体服的总部了。丑话说前面，这地方跟你记忆里的样子差了十万八千里。\n\n活儿很简单：干掉三个目标，然后撤。\n\n第一个是典狱长，我猜他就是那个吃里扒外、管着这地方的家伙。他在洗衣房。\n\n第二个是上城那帮雅皮士毒贩里的人物。我看他们是想结盟。他们在地下休息室。\n\n第三个是我们自己人。楼上，单间。干掉他。\n\n要是有时间，顺手把雅皮士带进城的那批高端货拿点回来。我想看看他们到底在折腾什么。
+we found the jumpsuits hq. fair warning, it looks a hell of a lot different from what you'll remember. job's simple. eliminate three targets, then get out. your first is the warden, i guess he's the turncoat that runs the joint. he'll be in the laundry room. your second is some rep from a group of uptown yuppie dealers. i think they're looking for an alliance. they're in the downstairs lounge. your third is one of our own. upstairs, private room. kill him. if you have the time, i'd like you to grab some of the high-end product that the yuppies must've brought downtown. i'm eager to see what all the fuss is about.	我们找到连体服帮的总部了。丑话说前面，这地方跟你记忆里的样子差了十万八千里。\n\n活儿很简单：干掉三个目标，然后撤。\n\n第一个是典狱长，我猜他就是那个吃里扒外、管着这地方的家伙。他在洗衣房。\n\n第二个是上城那帮雅皮士毒贩里的人物。我看他们是想结盟。他们在地下休息室。\n\n第三个是我们自己人。楼上，单间。干掉他。\n\n要是有时间，顺手把雅皮士带进城的那批高端货拿点回来。我想看看他们到底在折腾什么。
 you did well	干得漂亮
 this is fun.	真好玩。
 get to work.	开工了。
@@ -736,7 +736,7 @@ there's a fat bonus in it for you if you can kill all of them	你要是能把他
 you already have a few outfits you can select from the mirror	你已经有几套衣服，可以在镜子里选
 the only way in or out is gonna be the sewer and that's final	进出只能走下水道，就这么定了
 hang in there, won't be long now til this is all over anyways	撑住，反正离这一切结束不远了
-now i gotta live in the buttguy house and "guard" the entrance	现在我得住在屁眼佬的房子里“守”门
+now i gotta live in the buttguy house and "guard" the entrance	现在我得住在屁眼佬的房子里「守」门
 can take up to 6 meds into a job instead of 3, if you have them	出任务时最多能带 6 份药，而不是 3 份
 your third is one of our own. upstairs, private room. kill him.	第三个是我们自己人。楼上，包间。杀了他。
 if he doesn't agree on terms, don't harm him, it isn't worth it	如果他不同意条件，别伤他，不值当
@@ -747,7 +747,7 @@ you can hold up to 3 meds at a time, and stash any extras that you find	你一�
 whole fucking mall to ourselves, loaded with old clothes, and guess what?	整座他妈的商场都是我们的，堆满了旧衣服，你猜怎么着？
 the kit screen is where you can create your loadout before going to a job.	配装界面是你在出任务前组建装备的地方。
 if you wish to request medical supplies, get permission from your superior	要申请药品，先找你上级批准
-once you are done watching "special" movies, please clean up after yourself	看完“特殊”片子后，请自行清理
+once you are done watching "special" movies, please clean up after yourself	看完「特殊」片子后，请自行清理
 i've got a little program i make for the internet, it's called the meatshow!	我在网上做了个小节目，叫《肉秀》！
 if you want to go back to your apartment, you can do so from the pause menu.	想回公寓，可以从暂停菜单回去。
 perfect for throwing and slashing. however, it tends to get stuck in things.2	适合投掷和劈砍。不过容易卡在东西里。
@@ -755,7 +755,7 @@ sometimes it's nice to just slow everything down ... it makes you feel good!a	�
 press <rewiredelement type="glyphortext" playerid=0 actionname="kick"> to kick	按 <rewiredElement type="glyphOrText" playerId=0 actionName="Kick"> 踢击
 listen, i get that it's a pain in the ass, but we're keeping it locked for now	听着，我知道这事很烦，但现在先锁着
 reduces the base health of enemies by 10%, but enemies detect you twice as fast	敌人基础生命 -10%，但发现你的速度翻倍
-sup exit, the name's trevor fish. you can call me fishy-t, fishsticks, whatever.	哟，Exit，我叫 Trevor Fish。叫我鱼T、鱼条，随便。
+sup exit, the name's trevor fish. you can call me fishy-t, fishsticks, whatever.	哟，艾柯赛特，我叫 Trevor Fish。叫我鱼T、鱼条，随便。
 press <rewiredelement type="glyphortext" playerid=0 actionname="meds"> to use it	按 <rewiredElement type="glyphOrText" playerId=0 actionName="Meds"> 使用
 you can read about the items that you are selecting at each selection's computer.	在每个选择点的电脑上可以读到所选物品的介绍。
 tink and tail say it's for our safety, don't want to get shot when not in uniform	叮当和尾巴说是为了我们的安全，不穿制服容易挨枪
@@ -769,8 +769,8 @@ if we want to corner the market on these things, we gotta stop blowing ourselves
 p.s., if you can throw in some extra wire it'd really speed up this antenna bullshit	附：要是能多给点电线，这破天线的活儿能快不少
 this will restore the default input configuration. are you sure you want to do this?d	这将恢复默认输入配置。确定吗？
 this will restore the default input configuration. are you sure you want to do this?	这将恢复默认输入配置。确定吗？
-we found one of the jumpsuits' main distribution centres -- a big-ass abandoned mall.	我们找到了连体服的一个主要配送中心——一座他妈巨大的废弃商场。
-turns out those smilers weren't smart enough to make their own explosives. go figure.	看来那些笑脸佬没那么聪明，自己做不出炸药。真想不到。
+we found one of the jumpsuits' main distribution centres -- a big-ass abandoned mall.	我们找到了连体服帮的一个主要配送中心——一座他妈巨大的废弃商场。
+turns out those smilers weren't smart enough to make their own explosives. go figure.	看来那些笑脸帮没那么聪明，自己做不出炸药。真想不到。
 press <rewiredelement type="glyphortext" playerid=0 actionname="interact"> to interact	按 <rewiredElement type="glyphOrText" playerId=0 actionName="Interact"> 交互
 free room and board, i can get high literally whenever i want, no parents bitchin at me	包吃包住，想嗨随时能嗨，没爸妈唠叨
 pistols are 1.5x more accurate and deal 1.5x more damage, all other guns deal 0.5x damage	手枪精准度 ×1.5、伤害 ×1.5，其他枪械伤害 ×0.5
@@ -782,7 +782,7 @@ once you are done watching any movies in here, please put them back into their a
 melee-only. grants health on melee kills, more fist damage, kick damage, and an in-air flying kick	仅限近战。近战击杀回复生命，拳击、踢击伤害更高，还能空中飞踢
 this will restore the default input configuration for all players. are you sure you want to do this?	这将为所有玩家恢复默认输入配置。确定吗？
 once you are done selecting your loadout, you can interact with the van's rear door to go to the job.	选完装备后，跟面包车后门交互就能出发。
-we found the jumpsuits hq. fair warning, it looks a hell of a lot different from what you'll remember.	我们找到了连体服的总部。提醒一句，跟你记忆里的完全不一样。
+we found the jumpsuits hq. fair warning, it looks a hell of a lot different from what you'll remember.	我们找到了连体服帮的总部。提醒一句，跟你记忆里的完全不一样。
 your first is the warden, i guess he's the turncoat that runs the joint. he'll be in the laundry room.	第一个是典狱长，我猜他就是管这儿的叛徒。他在洗衣房。
 press <rewiredelement type="glyphortext" playerid=0 actionname="flashlight"> to toggle your flashlight	按 <rewiredElement type="glyphOrText" playerId=0 actionName="Flashlight"> 开关手电
 last time i let one of you fucking morons in there, she thought it would be a good idea to have a smoke	上次我放你们这帮蠢货进去一个，她居然想在里面抽烟
@@ -792,8 +792,8 @@ while using a ranged weapon, hold <rewiredelement type="glyphortext" playerid=0 
 look we love the food and all but some of were wondering if any of what you've been making contained cat?	嘿，我们是很爱你做的饭，但有些人想知道你做的东西里有没有猫肉？
 we're having some supply issues, food will have to be rationed while we secure connections from another city	我们有些供应问题，在打通另一个城市的渠道前，食物得配给
 increased explosive force, 50% less explosive damage, twice as much max ammo for explosives, traps, and bolts	爆炸威力提升，爆炸伤害 -50%，爆炸物、陷阱和弩箭的弹药上限翻倍
-derelict farmhouse somewhere outside the city, currently occupied by a group calling themselves "the smilers"	城外某处废弃农舍，目前被一伙自称“笑脸帮”的人占着
-from what clean-up found at the train station, the smilers have some ties to another gang called the jumpsuits.	从火车站的清扫结果看，笑脸帮和另一个叫“连体服”的帮派有联系。
+derelict farmhouse somewhere outside the city, currently occupied by a group calling themselves "the smilers"	城外某处废弃农舍，目前被一伙自称「笑脸帮」的人占着
+from what clean-up found at the train station, the smilers have some ties to another gang called the jumpsuits.	从火车站的清扫结果看，笑脸帮和连体服帮有联系。
 you can also cancel some reloads by pressing <rewiredelement type="glyphortext" playerid=0 actionname="attack">	你也可以按 <rewiredElement type="glyphOrText" playerId=0 actionName="Attack"> 取消部分换弹
 we're going to pack you up with some explosives and send you there to destroy their munitions and drug supplies.	我们会给你带上炸药，送你去那儿摧毁他们的弹药和毒品供应。
 i'd be super stoked if you joined as a contestant, we've got a big cash prize and some neat goodies to give away.	你要是来当选手我会超兴奋，我们有巨额现金奖和一些好东西要送。
@@ -812,13 +812,13 @@ oh, we also learned of this freak called chef. he has a penchant for cutting up 
 if you are holding multiple pieces of equipment, you can cycle through them with <rewiredelement type="glyphortext" playerid=0 actionname="quickswitch">	如果你带了多件装备，可以用 <rewiredElement type="glyphOrText" playerId=0 actionName="Quickswitch"> 切换
 if you have the time, i'd like you to grab some of the high-end product that the yuppies must've brought downtown. i'm eager to see what all the fuss is about.	你要是有时间，帮我弄点雅皮士带进城的高档货。我很想看看他们到底在吹什么。
 from the outside, this motel seems to be a lily-pad. the smilers ferry drugs from the motel into the city, though we're unsure if drugs are produced there, too	从外面看，这家汽车旅馆像是个跳板。笑脸帮把毒品从旅馆运进城，不过我们不确定那儿是不是也生产。
-caesar's orders are to eliminate two high-profile scumbags, tinker and tailor. says that they're the ones who've made the "inventions" you've started running into.	凯撒的命令是干掉两个头面人物，叮当和裁缝。据说你最近碰到的那些“发明”就是他们做的。
-an abandoned motel that was occupied by some squatters up until recently. says in the files you retrieved from the farmhouse that this place belongs to "bon-bon", whoever that is	一家废弃汽车旅馆，直到最近还有流浪者占着。你从农舍拿到的文件说这地方属于“邦邦”，管他是谁
-whatever the case may be, your orders are to destroy any and all drug-related equipment, to find information that'll reveal more about their places of operation, and to kill "bon-bon"	不管怎样，你的任务是摧毁所有与毒品有关的设备，找到能暴露他们更多据点位置的信息，并干掉“邦邦”
+caesar's orders are to eliminate two high-profile scumbags, tinker and tailor. says that they're the ones who've made the "inventions" you've started running into.	凯撒的命令是干掉两个头面人物，叮当和裁缝。据说你最近碰到的那些「发明」就是他们做的。
+an abandoned motel that was occupied by some squatters up until recently. says in the files you retrieved from the farmhouse that this place belongs to "bon-bon", whoever that is	一家废弃汽车旅馆，直到最近还有流浪者占着。你从农舍拿到的文件说这地方属于「糖果」，管他是谁
+whatever the case may be, your orders are to destroy any and all drug-related equipment, to find information that'll reveal more about their places of operation, and to kill "bon-bon"	不管怎样，你的任务是摧毁所有与毒品有关的设备，找到能暴露他们更多据点位置的信息，并干掉「糖果」
 found out that the yuppies have created a foothold in an abandoned plaza, uptown-ways. one of their higher-ups is trying to establish some kind of trade network up there, not sure who.	查到雅皮士在上城一座废弃广场站稳了脚。他们一个高层想在那儿建一套贸易网络，不知道是谁。
 anyways, as of now, we're unclear why the yuppies have built up such a strong fortification there. your job is to find out what's going on so we can figure out how to burn it all down.	总之，目前我们不清楚雅皮士为什么在那儿修了这么强的工事。你的任务是查清情况，好让我们想办法全部烧掉。
 while using a throwable melee weapon, hold <rewiredelement type="glyphortext" playerid=0 actionname="zoom"> to aim, and press <rewiredelement type="glyphortext" playerid=0 actionname="attack"> to throw	用可投掷的近战武器时，按住 <rewiredElement type="glyphOrText" playerId=0 actionName="Zoom"> 瞄准，按 <rewiredElement type="glyphOrText" playerId=0 actionName="Attack"> 投掷
-orders are to find the schematics for the landmines they're making, and to eliminate a guy called killswitch. he seems to be one of their ringleaders. if you manage to kill everyone there, you'll get a bonus.	任务是找到他们制造地雷的图纸，并干掉一个叫断电阀的人。他似乎是头目之一。你要是把那儿的人全杀了，有奖金。
+orders are to find the schematics for the landmines they're making, and to eliminate a guy called killswitch. he seems to be one of their ringleaders. if you manage to kill everyone there, you'll get a bonus.	任务是找到他们制造地雷的图纸，并干掉一个叫断路器的人。他似乎是头目之一。你要是把那儿的人全杀了，有奖金。
 thugg	暴徒
 hockey	冰球
 mdr	MDR 步枪
@@ -834,7 +834,7 @@ replaces gore with fun, celebratory confetti	把血腥特效换成欢庆彩纸
 remember, the passcode is \n\n<b>0451</b>\n\ndon't forget it\n\noh, and don't lose this paper either	记住，密码是\n\n<b>0451</b>\n\n别忘了\n\n另外，这张纸也别弄丢了
 baby_head	婴儿头
 baby face	娃娃脸
-killswitch	断路开关
+killswitch	断路器
 bonbon	糖果
 tinker	修补匠
 fists	拳头
@@ -844,7 +844,7 @@ lead_pipe	铅管
 junk_shield	破烂盾
 metal_armour	金属护甲
 heal 1/4 health on use, slows time for 10 seconds, heals you more per kill while slo-mo is active	使用后回复 1/4 生命，时间放慢 10 秒，慢动作期间每次击杀回复更多生命
-We found one of the Jumpsuits' main distribution centres -- a big-ass abandoned mall. \n\nKeep your eyes peeled and stay alert for traps. After what happened in the suburbs, we know that these guys don't fuck around.\n\nCaesar's orders are to eliminate two high-profile scumbags, Tinker and Tailor. Says that they're the ones who've made the "inventions" you've started running into. \n\nOn the side, if you have time, I'd appreciate if you grab an inactive turret and bring it to the van. I've got some things I need to research.	我们找到了连体服的一个主要配送中心——一座他妈巨大的废弃商场。\n\n睁大眼睛，当心陷阱。郊区那事之后，我们知道这帮人不闹着玩。\n\n凯撒的命令是干掉两个大人物，修补匠和裁缝。据说你最近碰到的那些「发明」就是他们弄的。\n\n另外，有空的话，帮我弄一座未激活的炮塔到面包车上来。我有东西要研究。
+We found one of the Jumpsuits' main distribution centres -- a big-ass abandoned mall. \n\nKeep your eyes peeled and stay alert for traps. After what happened in the suburbs, we know that these guys don't fuck around.\n\nCaesar's orders are to eliminate two high-profile scumbags, Tinker and Tailor. Says that they're the ones who've made the "inventions" you've started running into. \n\nOn the side, if you have time, I'd appreciate if you grab an inactive turret and bring it to the van. I've got some things I need to research.	我们找到了连体服帮的一个主要配送中心——一座他妈巨大的废弃商场。\n\n睁大眼睛，当心陷阱。郊区那事之后，我们知道这帮人不闹着玩。\n\n凯撒的命令是干掉两个大人物，修补匠和裁缝。据说你最近碰到的那些「发明」就是他们弄的。\n\n另外，有空的话，帮我弄一座未激活的炮塔到面包车上来。我有东西要研究。
 hockey_stick	冰球棍
 heavy_armour	重型护甲
 m9	M9 手枪
@@ -885,9 +885,9 @@ smiler	笑脸面具
 metal parts	金属零件
 hospital junk	医院废料
 good job	干得好
-eliminate all jumpsuit members	干掉所有连体服成员
-eliminate all jumpsuits	干掉所有连体服
-kill all jumpsuit members	杀光所有连体服成员
+eliminate all jumpsuit members	干掉所有连体服帮成员
+eliminate all jumpsuits	干掉所有连体服帮成员
+kill all jumpsuit members	杀光所有连体服帮成员
 bandolier armour	弹带护甲
 Push <sprite name="controller/keyboard/f"> to Interact	按 <sprite name="controller/keyboard/f"> 交互
 Press <sprite name="controller/keyboard/f"> to Interact	按 <sprite name="controller/keyboard/f"> 交互
@@ -896,7 +896,7 @@ if you run out of ammo, use <sprite name="controller/keyboard/r"> to reload\n\ny
 kill enemies with fall damage	用坠落伤害杀死敌人
 kill enemies by falling	用坠落砸死敌人
 this is an objective	这是一个目标
-kill "bon-bon"	干掉“蹦蹦”
+kill "bon-bon"	干掉「糖果」
 find the laptop on the 2nd floor	找到二楼的手提电脑
 destroy 3 drug lab stations	摧毁 3 个制毒工位
 kill 6 dudes with spikes	用尖刺干掉 6 个人
@@ -930,9 +930,9 @@ juggernaut	重装护甲
 swat	特警护甲
 military	军用护甲
 riot_shield	防暴盾
-hello, exit.	你好，Exit。
+hello, exit.	你好，艾柯赛特。
 will do.	好的。
-[unintelligible]	[听不清]
+[unintelligible]	[杂音]
 good work.	干得漂亮。
 mask found!	找到面具！
 uh ... okay	呃……好吧
