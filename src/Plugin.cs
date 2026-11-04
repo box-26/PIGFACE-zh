@@ -90,7 +90,13 @@ namespace PigfaceCN
                     "morphine blueprint unlocked!",
                     "Caesar?",
                     "Sample came back. ",
-                    "Yes sir."
+                    "Yes sir.",
+                    "Uh-huh.",
+                    "'course.",
+                    "Affirmative.",
+                    "Hmph.",
+                    "What?",
+                    "100 LMG ammo picked up"
                 };
                 for (int i = 0; i < probes.Length; i++)
                 {
@@ -119,9 +125,102 @@ namespace PigfaceCN
             {
                 if (Input.GetKeyDown(KeyCode.F9)) StartCoroutine(DumpScreen());
                 if (Input.GetKeyDown(KeyCode.F10)) StartCoroutine(TestRender());
+#if PIGFACE_DEBUG
+                if (Input.GetKeyDown(KeyCode.F8)) DumpObjectives();
+                if (Input.GetKeyDown(KeyCode.F7)) CompleteObjectives();
+#endif
             }
             catch { }
         }
+
+#if PIGFACE_DEBUG
+        // Dev-only helpers (never compiled into the release build).
+        static Type GameType(string name)
+        {
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (a.GetName().Name != "Assembly-CSharp") continue;
+                var t = a.GetType(name, false);
+                if (t != null) return t;
+            }
+            return null;
+        }
+
+        static System.Collections.IList ObjectiveList()
+        {
+            var mt = GameType("ObjectiveManager");
+            if (mt == null) { Log.LogWarning("obj: ObjectiveManager type missing"); return null; }
+            var inst = mt.GetField("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            object mgr = inst != null ? inst.GetValue(null) : null;
+            if (mgr == null) { Log.LogWarning("obj: no ObjectiveManager instance (not in a level?)"); return null; }
+            var lf = mt.GetField("objectives", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return lf != null ? lf.GetValue(mgr) as System.Collections.IList : null;
+        }
+
+        static void DumpObjectives()
+        {
+            try
+            {
+                var list = ObjectiveList();
+                if (list == null) return;
+                Log.LogInfo("obj: dump count=" + list.Count);
+                var ot = GameType("Objective");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    object o = list[i];
+                    string desc = "-", done = "?", main = "?";
+                    try
+                    {
+                        var fd = ot.GetField("_objectiveDescription", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        var fc = ot.GetField("_completed", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        var fm = ot.GetField("_mainObjective", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        desc = (fd != null ? fd.GetValue(o) : null) as string ?? "-";
+                        done = fc != null ? fc.GetValue(o).ToString() : "?";
+                        main = fm != null ? fm.GetValue(o).ToString() : "?";
+                    }
+                    catch (Exception e) { desc = "ERR " + e.Message; }
+                    Log.LogInfo("obj[" + i + "] main=" + main + " done=" + done + " | " + Trunc(desc, 80));
+                }
+            }
+            catch (Exception e) { Log.LogWarning("obj: dump failed " + e.Message); }
+        }
+
+        static void CompleteObjectives()
+        {
+            try
+            {
+                var list = ObjectiveList();
+                if (list == null) return;
+                var ot = GameType("Objective");
+                var done = ot.GetMethod("ObjectiveCompleted", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var fc = ot.GetField("_completed", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                int n = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    object o = list[i];
+                    try
+                    {
+                        if (fc != null && (bool)fc.GetValue(o)) continue;
+                        if (done != null) { done.Invoke(o, null); n++; }
+                    }
+                    catch (Exception e) { Log.LogWarning("obj: complete[" + i + "] failed " + e.Message); }
+                }
+                var mt = GameType("ObjectiveManager");
+                var inst = mt.GetField("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                object mgr = inst != null ? inst.GetValue(null) : null;
+                if (mgr != null)
+                {
+                    foreach (var name in new string[] { "CheckCompletion", "CheckObjectiveProgress" })
+                    {
+                        var m = mt.GetMethod(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        try { if (m != null) m.Invoke(mgr, null); } catch (Exception e) { Log.LogWarning("obj: " + name + " failed " + e.Message); }
+                    }
+                }
+                Log.LogInfo("obj: completed " + n + " objectives (of " + list.Count + ")");
+            }
+            catch (Exception e) { Log.LogWarning("obj: complete failed " + e.Message); }
+        }
+#endif
 
         IEnumerator DumpScreen()
         {
@@ -659,6 +758,22 @@ namespace PigfaceCN
                     if (TryLookup(xm.Groups["name"].Value, out nameZh))
                     {
                         zh = nameZh + " (x" + xm.Groups["n"].Value + ")";
+                        return true;
+                    }
+                }
+            }
+
+            // Pickup toasts: "100 LMG ammo picked up" -> "捡起 LMG 弹药 ×100".
+            {
+                var pm = System.Text.RegularExpressions.Regex.Match(s.Trim(),
+                    @"^(?<n>\d[\d,]*)\s+(?<item>.+?)\s+picked up$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (pm.Success)
+                {
+                    string itemZh;
+                    if (TryLookup(pm.Groups["item"].Value, out itemZh))
+                    {
+                        zh = "捡起 " + itemZh + " ×" + pm.Groups["n"].Value;
                         return true;
                     }
                 }

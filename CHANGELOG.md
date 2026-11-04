@@ -1,4 +1,6 @@
 ## v1.7
+- 过场字幕补译：`Uh-huh.`→嗯哼。、`'course.`→当然。、`Affirmative.`→收到。、`Hmph.`→哼。、`What?`→什么？
+- 拾取提示通用规则：`100 LMG ammo picked up` → `捡起 LMG 弹药 ×100`（数字+物品名任意组合）
 - 漏翻提示（解锁类）通用规则：`+ bear traps blueprint unlocked!` → `+ 已解锁捕兽夹蓝图！`；`+` 可选，兼容 `morphine blueprint unlocked!`
 - 结算/toast：`birthday_girl mask found!` → `生日女孩面具已找到！`（新增「面具已找到」通用规则）
 - 多词物品名带计数：`bear trap (x13)`、`morphine (x6)`
