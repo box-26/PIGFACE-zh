@@ -256,7 +256,7 @@ we've got the van waiting.	面包车在等着了。
 (optional) kill all yuppies	（可选）杀光所有雅皮士
 a place they take materials	一个他们运材料的地方
 call themselves "jumpsuits"	他们自称「连体服」
-earpiece comfortable? good.	耳机舒服吗？很好。
+earpiece comfortable? good.	耳机正常吗？很好。
 destroy 3 drug-lab stations	摧毁 3 个制毒工位
 kill the target in the barn	在谷仓里干掉目标
 any xinput-compatible guitar	任何兼容 XInput 的吉他
@@ -316,7 +316,7 @@ retrieve documents in the warehouse	在仓库里取回文件
 (optional) kill all the gang members	（可选）杀光所有帮派成员
 junk shield crafting recipe unlocked	废料护盾配方已解锁
 kill target beneath the train tracks	在铁轨下方干掉目标
-one that i can detonate at any time.	一个我随时能引爆的。
+one that i can detonate at any time.	我随时可以引爆的。
 retrieve the box of meds in the barn	在谷仓里取回那箱药品
 (optional) kill dudes in various ways	（可选）用各种方式弄死那帮人
 did you notice those police uniforms?	你注意到那些警服了吗？
@@ -409,7 +409,7 @@ then, don't take that out on me. you know how this goes!	那别把气撒我身�
 we also set up some basic targets for throwing practice.	我们还摆了些基础靶子练投掷。
 (optional) find and place an inactive turret near the van	（可选）在面包车附近找到并放置一座未激活的炮塔
 it's the same dogshit we've been finding everywhere else.	跟我们在别处找到的一样烂。
-this is your apartment. you spend time here between jobs.	这是你的公寓。两单活之间你在这里待着。
+this is your apartment. you spend time here between jobs.	这是你的公寓。工作之外你在这里待着。
 bothered by the fact that i could kill you at any second.	我能随时杀了你这件事让你不安。
 if they won't listen to you that's your problem, not mine.	他们不听你是你的问题，不是我的。
 plant a bomb to destroy crates outside the laundry section	安放炸弹摧毁洗衣区外面的木箱
@@ -862,7 +862,7 @@ press <sprite name="controller/keyboard/t"> to toggle your flashlight	按 <sprit
 press <sprite name="controller/keyboard/c"> to crouch	按 <sprite name="controller/keyboard/c"> 蹲下
 press <sprite name="controller/keyboard/e"> to kick\n\nkicking can break small props and knock enemies around	按 <sprite name="controller/keyboard/e"> 踢击\n\n踢击能打碎小物件，还能把敌人踹开
 while using a ranged weapon, hold <sprite name="controller/mouse/right_button"> to aim\n\nthis increases accuracy at the cost of slowing you down\n\n<b>shotguns are not affected by moving or aiming accuracy</b>	使用远程武器时，按住 <sprite name="controller/mouse/right_button"> 瞄准\n\n这会提高精度，但会让你移动变慢\n\n<b>霰弹枪不受移动或瞄准精度影响</b>
-if you are holding multiple pieces of equipment, you can cycle through them with <sprite name="controller/keyboard/q">	如果带着多件装备，可以用 <sprite name="controller/keyboard/q"> 循环切换
+if you are holding multiple pieces of equipment, you can cycle through them with <sprite name="controller/keyboard/q">	如果带着多件装备，可以按 <sprite name="controller/keyboard/q"> 循环切换
 one of the meds you can use is <b>morphine</b>, it heals you back to full health on use\n\npress <sprite name="controller/keyboard/v"> to use it\n\nyou can hold up to 3 meds at a time, and stash any extras that you find\n\nif you don't have morphine, you can slowly regenerate half your health by <b>not taking damage for 8 seconds</b>	你可以用的药品之一是<b>吗啡</b>，使用后回复全部生命\n\n按 <sprite name="controller/keyboard/v"> 使用\n\n你最多能带 3 份药，捡到的多余药品会自动存起来\n\n如果你没有吗啡，可以<b>8 秒内不受伤</b>来慢慢回复一半生命
 kill enemies with spike walls/barrels	用尖刺墙/油桶杀死敌人
 raven	渡鸦面具
@@ -875,7 +875,7 @@ cigarette picked up	捡到香烟
 story mode	剧情模式
 remix mode	变奏模式
 one of the meds you can use is <b>morphine</b>, it heals you back to full health on use\n\npress <rewiredElement type="glyphOrText" playerId=0 actionName="Meds"> to use it\n\nyou can hold up to 3 meds at a time, and stash any extras that you find\n\nif you don't have morphine, you can slowly regenerate half your health by <b>not taking damage for 8 seconds</b>	你可以用的药品之一是<b>吗啡</b>，使用后回复全部生命\n\n按 <sprite name="controller/keyboard/v"> 使用\n\n最多能带 3 份药，捡到的多余药品会自动存起来\n\n如果没有吗啡，<b>8 秒内不受伤</b>就能慢慢回复一半生命
-if you run out of ammo, use <rewiredElement type="glyphOrText" playerId=0 actionName="Reload"> to reload\n\nyou can also cancel some reloads by pressing <rewiredElement type="glyphOrText" playerId=0 actionName="Attack">	弹药耗尽时，按 <rewiredElement type="glyphOrText" playerId=0 actionName="Reload"> 换弹\n\n按 <rewiredElement type="glyphOrText" playerId=0 actionName="Attack"> 也能打断部分换弹动作
+if you run out of ammo, use <rewiredElement type="glyphOrText" playerId=0 actionName="Reload"> to reload\n\nyou can also cancel some reloads by pressing <rewiredElement type="glyphOrText" playerId=0 actionName="Attack">	弹药耗尽时，按 <rewiredElement type="glyphOrText" playerId=0 actionName="Reload"> 换弹\n\n按 <rewiredElement type="glyphOrText" playerId=0 actionName="Attack"> 能打断部分换弹动作
 press <rewiredElement type="glyphOrText" playerId=0 actionName="Kick"> to kick\n\nkicking can break small props and knock enemies around	按 <rewiredElement type="glyphOrText" playerId=0 actionName="Kick"> 踢击\n\n踢击能打碎小道具，也能把敌人踢得东倒西歪
 while using a ranged weapon, hold <rewiredElement type="glyphOrText" playerId=0 actionName="Zoom"> to aim\n\nthis increases accuracy at the cost of slowing you down\n\n<b>shotguns are not affected by moving or aiming accuracy</b>	使用远程武器时，按住 <rewiredElement type="glyphOrText" playerId=0 actionName="Zoom"> 瞄准\n\n这会提高精度，但会让你移动变慢\n\n<b>霰弹枪不受移动或瞄准精度影响</b>
 good	好
@@ -892,7 +892,7 @@ bandolier armour	弹带护甲
 Push <sprite name="controller/keyboard/f"> to Interact	按 <sprite name="controller/keyboard/f"> 交互
 Press <sprite name="controller/keyboard/f"> to Interact	按 <sprite name="controller/keyboard/f"> 交互
 while using a throwable melee weapon, hold <sprite name="controller/mouse/right_button"> to aim, and press <sprite name="controller/mouse/left_button"> to throw	用可投掷的近战武器时，按住 <sprite name="controller/mouse/right_button"> 瞄准，按 <sprite name="controller/mouse/left_button"> 投掷
-if you run out of ammo, use <sprite name="controller/keyboard/r"> to reload\n\nyou can also cancel some reloads by pressing <sprite name="controller/mouse/left_button">	弹药耗尽时，按 <sprite name="controller/keyboard/r"> 换弹\n\n按 <sprite name="controller/mouse/left_button"> 也能打断部分换弹动作
+if you run out of ammo, use <sprite name="controller/keyboard/r"> to reload\n\nyou can also cancel some reloads by pressing <sprite name="controller/mouse/left_button">	弹药耗尽时，按 <sprite name="controller/keyboard/r"> 换弹\n\n按 <sprite name="controller/mouse/left_button"> 能打断部分换弹动作
 kill enemies with fall damage	用坠落伤害杀死敌人
 kill enemies by falling	用坠落砸死敌人
 this is an objective	这是一个目标
@@ -950,3 +950,6 @@ We need to move, now.	我们得走了，快。
 + bear trap blueprint unlocked!	+ 已解锁捕兽夹蓝图！
 empty	空
 good.	好。
+caesar?	凯撒？
+sample came back.	样本送回来了。
+yes sir.	是，长官。

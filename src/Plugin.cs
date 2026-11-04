@@ -85,7 +85,12 @@ namespace PigfaceCN
                     "morphine (x6)",
                     "Good.",
                     "empty",
-                    "warehouse job accepted"
+                    "warehouse job accepted",
+                    "birthday_girl mask found!",
+                    "morphine blueprint unlocked!",
+                    "Caesar?",
+                    "Sample came back. ",
+                    "Yes sir."
                 };
                 for (int i = 0; i < probes.Length; i++)
                 {
@@ -607,19 +612,37 @@ namespace PigfaceCN
                 }
             }
 
-            // Unlock toasts are composed at runtime: "+ bear traps blueprint unlocked!".
-            // Translate the item name and rebuild the sentence around it.
+            // Unlock toasts are composed at runtime: "+ bear traps blueprint unlocked!" or
+            // without the leading "+" ("morphine blueprint unlocked!"). Translate the item
+            // name and rebuild the sentence around it.
             {
                 var um = System.Text.RegularExpressions.Regex.Match(s.Trim(),
-                    @"^\+\s*(.+?)\s+(blueprints?|schematics?)\s+unlocked!$",
+                    @"^(?<plus>\+\s*)?(?<item>.+?)\s+(blueprints?|schematics?)\s+unlocked!$",
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                 if (um.Success)
                 {
                     string itemZh;
-                    if (TryLookup(um.Groups[1].Value, out itemZh))
+                    if (TryLookup(um.Groups["item"].Value, out itemZh))
                     {
-                        string kind = um.Groups[2].Value.ToLowerInvariant().StartsWith("schematic") ? "图纸" : "蓝图";
-                        zh = "+ 已解锁" + itemZh + kind + "！";
+                        string kind = um.Groups[3].Value.ToLowerInvariant().StartsWith("schematic") ? "图纸" : "蓝图";
+                        string lead = um.Groups["plus"].Success ? "+ " : "";
+                        zh = lead + "已解锁" + itemZh + kind + "！";
+                        return true;
+                    }
+                }
+            }
+
+            // Payout toasts: "birthday_girl mask found!" -> "<mask> 已找到！".
+            {
+                var fm = System.Text.RegularExpressions.Regex.Match(s.Trim(),
+                    @"^(?<item>.+?)\s+mask found!$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (fm.Success)
+                {
+                    string itemZh;
+                    if (TryLookup(fm.Groups["item"].Value, out itemZh))
+                    {
+                        zh = itemZh.EndsWith("面具") ? itemZh + "已找到！" : itemZh + "面具已找到！";
                         return true;
                     }
                 }
