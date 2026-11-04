@@ -12,7 +12,13 @@
 - Python 3.11+（只有改词库/字体时才用）
 - 游戏本体（Steam AppID `3341650`）
 
-编译只需要引用游戏目录 `Pigface_Data\Managed` 下的 Unity 程序集，`src/PigfaceCN.csproj` 里已经写好了。
+编译只需要引用游戏目录 `Pigface_Data\Managed` 下的 Unity 程序集。默认认为游戏在仓库**同级**的 `PIGFACE-zh` 文件夹里（即 `..\..\PIGFACE-zh`），不对的话用环境变量指定：
+
+```powershell
+$env:PIGFACE_GAME_DIR = "C:\SteamLibrary\steamapps\common\PIGFACE"
+# 或者每次编译临时传：
+dotnet build src/PigfaceCN.csproj -c Release -p:GameDir="D:\Games\PIGFACE"
+```
 
 ---
 
@@ -21,7 +27,7 @@
 调试代码全部包在 `#if PIGFACE_DEBUG ... #endif` 里，**发布版编译时整段消失**。
 
 ```bash
-# 调试版：带 F7 / F8 / F9
+# 调试版：带 F7 / F8 / F9 / F10
 dotnet build src/PigfaceCN.csproj -c Release -p:DefineConstants=PIGFACE_DEBUG -o out-debug
 
 # 发布版：不含任何调试代码
@@ -43,12 +49,15 @@ $s.Contains('CompleteObjectives')   # 必须是 False
 | 键 | 作用 | 改不改游戏状态 |
 |---|---|---|
 | `F9` | 导出当前场景所有文本组件（路径 / 文本 / 字体 / 颜色 / 材质参数）+ 截图 | 不改 |
+| `F10` | 叠三行同一句测试中文（三种字体方案），截图 + 材质参数，6 秒后销毁 | 不改 |
 | `F8` | 导出当前关卡任务目标清单 | 不改 |
 | `F7` | 调用 `Objective.ObjectiveCompleted()` 完成当前关卡所有目标，再让 `ObjectiveManager.CheckCompletion()` 复核 | **改** |
 
 `F7` 的用途是快速跳到结算、看每关的过场与结算提示，以收集译文。**不要在日常存档上用。**
 
-这三个键依赖反射访问 `Assembly-CSharp` 里的 `Objective` / `ObjectiveManager`，游戏大改后可能失效；失效只是按键没反应，不影响翻译本身。
+`F10` 是当年排查"字带边框 / 字太粗"时的对照实验台：A=游戏原字体+回退、B=另一主字体+回退、C=强制换用内置字体，用来区分"SDF 比例问题"和"材质继承问题"。
+
+这四个键依赖反射访问 `Assembly-CSharp` 里的 `Objective` / `ObjectiveManager`，游戏大改后可能失效；失效只是按键没反应，不影响翻译本身。
 
 ---
 

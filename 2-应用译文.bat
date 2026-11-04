@@ -3,21 +3,22 @@ chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
 
-set PY=D:\AI-Workspace\.venv\Scripts\python.exe
-if not exist "%PY%" set PY=python
+set PYEXE=python
+set PYARGS=
+where py >nul 2>nul && (set PYEXE=py & set PYARGS=-3)
 
-"%PY%" tools\apply_translations.py
+"%PYEXE%" %PYARGS% tools\apply_translations.py
 if errorlevel 1 goto fail
 
 echo.
 echo ---- dictionary check ----
-"%PY%" tools\check.py
+"%PYEXE%" %PYARGS% tools\check.py
 
 echo.
 echo ---- font coverage check ----
-set FONT=D:\AI-Workspace\release\PIGFACE-汉化\BepInEx\plugins\PigfaceCN\font.ttf
+set FONT=out\font.ttf
 if exist "%FONT%" (
-  "%PY%" tools\check_font.py --font "%FONT%"
+  "%PYEXE%" %PYARGS% tools\check_font.py --font "%FONT%"
 ) else (
   echo font.ttf not found at %FONT% - skip this check
 )

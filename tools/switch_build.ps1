@@ -1,18 +1,18 @@
 ﻿param(
     [ValidateSet('dev', 'release')]
     [string]$Mode = 'dev',
-    [string]$GamePath = 'D:\AI-Workspace\PIGFACE-zh'
+    [string]$GamePath = (Join-Path $PSScriptRoot '..\..\PIGFACE-zh'),
+    # Both DLLs come from the build commands in docs/DEV.md (-o out-debug / -o out-release).
+    [string]$DevDll = (Join-Path $PSScriptRoot '..\out-debug\PigfaceCN.dll'),
+    [string]$RelDll = (Join-Path $PSScriptRoot '..\out-release\PigfaceCN.dll')
 )
 
 $ErrorActionPreference = 'Stop'
 $plug = Join-Path $GamePath 'BepInEx\plugins\PigfaceCN'
 if (-not (Test-Path $plug)) { throw "PigfaceCN 插件目录不存在：$plug" }
 
-$devDll = 'D:\AI-Workspace\work\plugin\out-debug\PigfaceCN.dll'
-$relDll = 'D:\AI-Workspace\release\PIGFACE-汉化\BepInEx\plugins\PigfaceCN\PigfaceCN.dll'
-
-$src = if ($Mode -eq 'dev') { $devDll } else { $relDll }
-if (-not (Test-Path $src)) { throw "找不到 DLL：$src" }
+$src = if ($Mode -eq 'dev') { $DevDll } else { $RelDll }
+if (-not (Test-Path $src)) { throw "找不到 DLL：$src（先按 docs/DEV.md 编译）" }
 
 Get-Process Pigface -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Milliseconds 800

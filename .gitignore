@@ -1,5 +1,6 @@
 # generated / build output
 out/
+dist/
 history/
 bin/
 obj/
@@ -15,22 +16,22 @@ debug.flag
 dump_*.txt
 dump_*.png
 atlas.raw
+ç¼ºè¯æŠ¥å‘Š.txt
+missing_report.txt
+
+# translation work sheet (local, per-maintainer)
+å¾…ç¿»è¯‘.tsv
 
 # local game files or copies (never commit the game itself)
 PIGFACE-zh/
 Pigface_Data/
 Pigface.exe
 
+# generated at install time (machine-specific path)
+game_path.txt
+
 # editor / OS noise
 .vs/
 .vscode/
 Thumbs.db
 desktop.ini
-
-# translation work sheet (local, per-user)
-´ı·­Òë.tsv
-
-
-# generated at install time (machine-specific path)
-game_path.txt
-

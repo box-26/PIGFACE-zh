@@ -1,8 +1,18 @@
-﻿param(
-    [string]$Source = "D:\AI-Workspace\release\PIGFACE-汉化",
-    [string]$Out    = "D:\AI-Workspace\release\PIGFACE-zh-v1.6.zip"
+param(
+    # Folder that will become the zip root. Must contain BepInEx\plugins\PigfaceCN\.
+    [string]$Source = (Join-Path $PSScriptRoot '..\dist'),
+    # Output zip. Default: out\PIGFACE-zh.zip next to this repo.
+    [string]$Out    = (Join-Path $PSScriptRoot '..\out\PIGFACE-zh.zip')
 )
 $ErrorActionPreference = 'Stop'
+if (-not (Test-Path (Join-Path $Source 'BepInEx\plugins\PigfaceCN\PigfaceCN.dll'))) {
+    Write-Host ("Source folder does not look like a release payload: " + $Source)
+    Write-Host "Pass -Source <folder containing BepInEx\plugins\PigfaceCN\PigfaceCN.dll>"
+    exit 1
+}
+$Source = (Resolve-Path -LiteralPath $Source).Path
+$outDir = Split-Path -Parent $Out
+if (-not (Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir -Force | Out-Null }
 $forbidden = @('game_path.txt', 'seen.txt', 'miss.log', 'debug.flag', 'LogOutput.log', '缺词报告.txt', 'missing_report.txt')
 foreach ($f in $forbidden) {
     $p = Join-Path $Source $f

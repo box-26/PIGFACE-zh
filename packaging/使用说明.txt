@@ -90,7 +90,7 @@
 
 7) 装了还是英文 / 显示异常（三步排查）
    ① 看 BepInEx\LogOutput.log 是否有：
-        dict loaded: 938 entries
+        dict loaded: 965 entries
         frag loaded: 131 entries
         font: simhei.ttf
         harmony patched ok
@@ -155,7 +155,7 @@
   BepInEx\core\         BepInEx 本体
   BepInEx\plugins\PigfaceCN\
       PigfaceCN.dll     汉化主程序
-      zh.tsv            词库（948 条）
+      zh.tsv            词库（965 条）
       frag.tsv          片段规则（131 条）
       sold.png          “售罄”贴图
       font.ttf          内置中文字体（备用）
