@@ -89,9 +89,15 @@ try {
 
 $resLine = 'unknown'
 try {
-    Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
-    $vs = [System.Windows.Forms.SystemInformation]::VirtualScreen
-    $resLine = "$($vs.Width)x$($vs.Height)"
+    $modes = @(Get-CimInstance Win32_VideoController -ErrorAction Stop | Where-Object { $_.CurrentHorizontalResolution -gt 0 })
+    if ($modes.Count -gt 0) {
+        $best = $modes | Sort-Object { $_.CurrentHorizontalResolution * $_.CurrentVerticalResolution } -Descending | Select-Object -First 1
+        $resLine = "$($best.CurrentHorizontalResolution)x$($best.CurrentVerticalResolution)"
+    } else {
+        Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
+        $vs = [System.Windows.Forms.SystemInformation]::VirtualScreen
+        $resLine = "$($vs.Width)x$($vs.Height)（DPI 缩放后的逻辑值）"
+    }
 } catch { }
 
 $fontLine = 'unknown'
@@ -110,8 +116,13 @@ $otherLine = if ($others.Count -eq 0) { '无' } else { "$($others.Count) 个（$
 
 $avLine = 'unknown'
 try {
-    $av = @((Get-CimInstance -Namespace 'root\SecurityCenter2' -ClassName AntiVirusProduct -ErrorAction Stop).displayName)
-    if ($av.Count -eq 0) { $avLine = '未检测到' } else { $avLine = ($av -join ', ') }
+    $avNames = @()
+    foreach ($a in (Get-CimInstance -Namespace 'root\SecurityCenter2' -ClassName AntiVirusProduct -ErrorAction Stop)) {
+        $exe = [string]$a.pathToSignedProductExe
+        # 卸载后仍残留在“安全中心”登记里的杀软，用“程序文件还在不在”剔除
+        if ($exe -like 'windowsdefender://*' -or (Test-Path -LiteralPath $exe)) { $avNames += $a.displayName }
+    }
+    if ($avNames.Count -eq 0) { $avLine = '未检测到' } else { $avLine = ($avNames -join ', ') }
 } catch { $avLine = '无法读取' }
 
 $flagCjk = if ($GamePath -match '[\u4e00-\u9fff]') { '是' } else { '否' }
@@ -143,7 +154,7 @@ $out.Add('====================================================')
 $out.Add('')
 $out.Add('【这份报告包含什么】')
 $out.Add('  Windows 版本与位数、屏幕分辨率、补丁版本与词库条数、游戏 Steam buildid、')
-$out.Add('  插件实际加载的字体、是否装了其它 BepInEx 插件、杀毒软件产品名（只读取名字）、')
+$out.Add('  插件实际加载的字体、是否装了其它 BepInEx 插件、杀毒软件产品名（只读取名字，已卸载但残留登记的会被剔除）、')
 $out.Add('  漏翻句子的原文，以及它出现在哪个界面。')
 $out.Add('')
 $out.Add('【这份报告不包含什么】')
