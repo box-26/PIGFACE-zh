@@ -15,7 +15,7 @@ using UGlyphRect = UnityEngine.TextCore.GlyphRect;
 
 namespace PigfaceCN
 {
-    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.6.0")]
+    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.7.0")]
     public class Plugin : BaseUnityPlugin
     {
         internal static BepInEx.Logging.ManualLogSource Log;
@@ -34,7 +34,7 @@ namespace PigfaceCN
             Directory.CreateDirectory(OutDir);
             Writer = new StreamWriter(Path.Combine(OutDir, "seen.txt"), true, new UTF8Encoding(false));
             Writer.AutoFlush = true;
-            Log.LogInfo("PigfaceCN v1.6 starting");
+            Log.LogInfo("PigfaceCN v1.7 starting");
             Log.LogInfo("repo: https://github.com/box-26/PIGFACE-zh");
 
             try { LoadDict(); } catch (Exception e) { Log.LogError("load dict: " + e); }
@@ -78,7 +78,14 @@ namespace PigfaceCN
                     "- electrical scrap x10",
                     "no_mask",
                     "mask not found",
-                    "no_mask<br><br>"
+                    "no_mask<br><br>",
+                    "+ bear traps blueprint unlocked!",
+                    "+ landmine schematics unlocked!",
+                    "bear trap (x13)",
+                    "morphine (x6)",
+                    "Good.",
+                    "empty",
+                    "warehouse job accepted"
                 };
                 for (int i = 0; i < probes.Length; i++)
                 {
@@ -428,7 +435,7 @@ namespace PigfaceCN
                 if (r == null || r.texture == null) continue;
                 if (r.texture.name.IndexOf("sold_out", StringComparison.OrdinalIgnoreCase) < 0) continue;
                 if (!SoldDone.Add(r.GetInstanceID())) continue;
-                r.texture = SoldTex;
+                r.texture = FitSold(r.texture.width, r.texture.height);
             }
             var imgs = Resources.FindObjectsOfTypeAll<UnityEngine.UI.Image>();
             for (int i = 0; i < imgs.Length; i++)
@@ -440,8 +447,8 @@ namespace PigfaceCN
                 if (!SoldDone.Add(im.GetInstanceID())) continue;
                 var os = im.sprite;
                 Vector2 nPivot = new Vector2(os.pivot.x / os.rect.width, os.pivot.y / os.rect.height);
-                im.sprite = Sprite.Create(SoldTex, new Rect(0f, 0f, SoldTex.width, SoldTex.height),
-                    nPivot, os.pixelsPerUnit, 0, SpriteMeshType.FullRect, os.border);
+                { var ft = FitSold(st.width, st.height); im.sprite = Sprite.Create(ft, new Rect(0f, 0f, ft.width, ft.height),
+                    nPivot, os.pixelsPerUnit, 0, SpriteMeshType.FullRect, os.border); }
             }
             var rr = Resources.FindObjectsOfTypeAll<Renderer>();
             for (int i = 0; i < rr.Length; i++)
@@ -456,11 +463,45 @@ namespace PigfaceCN
                     var tx = mat.GetTexture("_MainTex");
                     if (tx == null || tx.name.IndexOf("sold_out", StringComparison.OrdinalIgnoreCase) < 0) continue;
                     if (!SoldDone.Add(rd.GetInstanceID() * 31 + m)) continue;
-                    mat.SetTexture("_MainTex", SoldTex);
+                    mat.SetTexture("_MainTex", FitSold(tx.width, tx.height));
                 }
             }
         }
 
+        static readonly System.Collections.Generic.Dictionary<string, Texture2D> FitCache =
+            new System.Collections.Generic.Dictionary<string, Texture2D>();
+
+        // The badge ships at 256x128, the size the original texture had when we measured it.
+        // If a game update changes that size, scaling keeps the art aligned instead of stretched.
+        static Texture2D FitSold(int w, int h)
+        {
+            if (SoldTex == null) return null;
+            if (w <= 0 || h <= 0) return SoldTex;
+            if (w == SoldTex.width && h == SoldTex.height) return SoldTex;
+            string key = w + "x" + h;
+            Texture2D cached;
+            if (FitCache.TryGetValue(key, out cached) && cached != null) return cached;
+
+            var t = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            var src = SoldTex.GetPixels32();
+            var dst = new Color32[w * h];
+            float sx = (float)SoldTex.width / w, sy = (float)SoldTex.height / h;
+            for (int y = 0; y < h; y++)
+            {
+                int syi = Mathf.Min(SoldTex.height - 1, (int)(y * sy)) * SoldTex.width;
+                for (int x = 0; x < w; x++)
+                {
+                    int sxi = Mathf.Min(SoldTex.width - 1, (int)(x * sx));
+                    dst[y * w + x] = src[syi + sxi];
+                }
+            }
+            t.SetPixels32(dst);
+            t.Apply(false, false);
+            t.name = "PF_SOLD";
+            FitCache[key] = t;
+            Log.LogInfo("sold: scaled to " + w + "x" + h);
+            return t;
+        }
         static string FindData(string name)
         {
             var cands = new List<string>();
@@ -566,6 +607,54 @@ namespace PigfaceCN
                 }
             }
 
+            // Unlock toasts are composed at runtime: "+ bear traps blueprint unlocked!".
+            // Translate the item name and rebuild the sentence around it.
+            {
+                var um = System.Text.RegularExpressions.Regex.Match(s.Trim(),
+                    @"^\+\s*(.+?)\s+(blueprints?|schematics?)\s+unlocked!$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (um.Success)
+                {
+                    string itemZh;
+                    if (TryLookup(um.Groups[1].Value, out itemZh))
+                    {
+                        string kind = um.Groups[2].Value.ToLowerInvariant().StartsWith("schematic") ? "图纸" : "蓝图";
+                        zh = "+ 已解锁" + itemZh + kind + "！";
+                        return true;
+                    }
+                }
+            }
+
+            // Item labels carry a count: "bear trap (x13)". PrefixKeys only knows single
+            // words, so strip the counter, translate the name, then put the counter back.
+            {
+                var xm = System.Text.RegularExpressions.Regex.Match(s.Trim(), @"^(?<name>.+?)\s*\(x(?<n>\d+)\)$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (xm.Success)
+                {
+                    string nameZh;
+                    if (TryLookup(xm.Groups["name"].Value, out nameZh))
+                    {
+                        zh = nameZh + " (x" + xm.Groups["n"].Value + ")";
+                        return true;
+                    }
+                }
+            }
+
+            // Job toasts read "<level> job accepted"; the level name alone is translated.
+            {
+                var jm = System.Text.RegularExpressions.Regex.Match(s.Trim(), @"^(?<lvl>.+?)\s+job accepted$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (jm.Success)
+                {
+                    string lvlZh;
+                    if (TryLookup(jm.Groups["lvl"].Value, out lvlZh))
+                    {
+                        zh = lvlZh + "：任务已接受";
+                        return true;
+                    }
+                }
+            }
             // Phone panel rows: "面具：SMILER", "护甲：BANDOLIER". The label is already
             // Chinese but the value is still a raw id, so translate the value alone.
             {
@@ -1231,5 +1320,4 @@ namespace PigfaceCN
         }
     }
 }
-
 
