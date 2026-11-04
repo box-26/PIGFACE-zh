@@ -1,0 +1,79 @@
+name: 缺词 / 没翻译
+description: 某个界面、某句话还是英文
+title: "[缺词] "
+labels: ["missing-text"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **先用 30 秒自查**：中文会晚 0.2–1 秒出现，等 2 秒还是英文才算缺词。
+        有 `缺词报告.txt` 的话，处理速度会快很多（报告里已含版本、系统、字体、原文、位置）。
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 提问前确认（必须勾选）
+      options:
+        - label: 我读过补丁文件夹里的「使用说明.txt」
+          required: true
+        - label: 我在 Issues 里搜过这个英文原文/界面名，没有重复
+          required: true
+        - label: 我知道本补丁只支持 Steam 正版 + Windows
+          required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: 缺词报告.txt（推荐，直接拖进来）
+      description: 双击补丁文件夹里的「检查缺词.bat」，它会生成「缺词报告.txt」。把这个文件拖到下面框里即可。
+      placeholder: 把 缺词报告.txt 拖到这里；没有就留空，并填写下面三项。
+    validations:
+      required: false
+
+  - type: input
+    id: patch_version
+    attributes:
+      label: 补丁版本（没有报告时必填）
+      description: 在 缺词报告.txt 第一行，或 BepInEx\LogOutput.log 里搜 "PigfaceCN v"
+      placeholder: v1.7
+
+  - type: textarea
+    id: original
+    attributes:
+      label: 英文原文（没有报告时必填）
+      description: 照抄屏幕上那行英文，包括数字和括号
+      placeholder: DESTROY 3 DRUG-LAB STATIONS (0/3)
+    validations:
+      required: false
+
+  - type: input
+    id: where
+    attributes:
+      label: 你在哪个界面看到的？（用你自己的话说）
+      description: 报告里的路径是给程序看的，这里写玩家视角的位置
+      placeholder: 手机 → 目标栏 / 世界地图 → 废弃商场 → 说明
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图（可选但很有用）
+      description: 直接把图片拖进这个框
+    validations:
+      required: false
+
+  - type: textarea
+    id: mods
+    attributes:
+      label: 有没有装其它 Mod？（可选）
+      description: 有的话写插件名；没有就写“无”
+      placeholder: 无
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 你希望怎么翻？（可选）
+      description: 有时候你的说法比我们的更自然，会被采纳
+    validations:
+      required: false

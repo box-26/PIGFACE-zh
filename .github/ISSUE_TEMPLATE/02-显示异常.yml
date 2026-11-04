@@ -1,0 +1,82 @@
+name: 显示异常
+description: 方块字、字叠在一起、边框、错位、闪烁
+title: "[显示] "
+labels: ["display"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **截图基本是必需的**——这类问题没有图，我们只能靠猜。
+        已知的正常现象：中文比英文**晚 0.2–1 秒**出现；少数界面标签变短后数值列会左移。
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 提问前确认（必须勾选）
+      options:
+        - label: 我确认这不是"中文晚一拍出现"，而是持续存在的异常
+          required: true
+        - label: 我在 Issues 里搜过现象关键词（方块、边框、重叠），没有重复
+          required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图（必填）
+      description: 把出问题的画面截下来拖进来，尽量包含整个界面
+      placeholder: 拖图片到这里
+    validations:
+      required: true
+
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: 具体是什么现象？（可多选）
+      multiple: true
+      options:
+        - 方块 / 豆腐块（字没渲染出来）
+        - 文字有边框 / 描边
+        - 文字太粗或太淡
+        - 文字重叠 / 叠字
+        - 文字错位 / 出框
+        - 闪烁 / 跳动
+        - 文字变成一排问号或乱码
+        - 其它（在下面说明）
+    validations:
+      required: true
+
+  - type: input
+    id: where
+    attributes:
+      label: 哪个界面？
+      placeholder: 制作站 → 药品页 / 手机 → 任务栏
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reproducible
+    attributes:
+      label: 能稳定复现吗？
+      options:
+        - 每次都有
+        - 偶尔出现
+        - 只出现过一次
+        - 不确定
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: 缺词报告.txt（可选，能帮我们拿到分辨率、字体、DPI 等信息）
+      description: 双击补丁文件夹里的「检查缺词.bat」生成，拖进来即可
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充说明（可选）
+      description: 比如改了分辨率/窗口模式后出现、装了哪些 Mod
+    validations:
+      required: false

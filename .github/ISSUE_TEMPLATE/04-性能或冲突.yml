@@ -1,0 +1,72 @@
+name: 卡顿 / 冲突
+description: 掉帧、卡顿、和别的 Mod 打架
+title: "[性能] "
+labels: ["performance"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        汉化本身只在**文本变化时**做一次查表，正常不会明显影响帧数。
+        但如果确实感觉变卡，用下面的对照方法能快速分清是不是补丁引起的。
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 提问前确认
+      options:
+        - label: 我在 Issues 里搜过，没有重复（必须勾选）
+          required: true
+        - label: 我试过临时卸载补丁，在同一场景做过对比（推荐）
+          required: false
+
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: 具体现象
+      options:
+        - 整体帧数下降
+        - 打开某些界面时卡一下（商店 / 手机 / 制作站）
+        - 战斗中卡顿
+        - 加载时间变长
+        - 游戏崩溃
+        - 其它
+    validations:
+      required: true
+
+  - type: dropdown
+    id: without_patch
+    attributes:
+      label: 卸载补丁后，问题还在吗？
+      options:
+        - 卸载后正常 → 疑似补丁引起
+        - 卸载后一样卡 → 与补丁无关
+        - 还没试过
+    validations:
+      required: true
+
+  - type: textarea
+    id: mods
+    attributes:
+      label: 装了哪些其它 Mod / 插件？
+      description: BepInEx\plugins 下的文件夹名，或者其它汉化补丁
+      placeholder: 无
+    validations:
+      required: false
+
+  - type: textarea
+    id: specs
+    attributes:
+      label: 大致配置（可选）
+      description: 显卡型号、内存、游戏分辨率和画质设置
+      placeholder: RTX 4060 / 16G / 2560x1600 全高
+    validations:
+      required: false
+
+  - type: textarea
+    id: fps
+    attributes:
+      label: 帧数对比（可选）
+      description: 有补丁 / 无补丁 的大致帧数
+      placeholder: 有补丁 118 FPS，无补丁 120 FPS
+    validations:
+      required: false

@@ -1,0 +1,97 @@
+name: 安装 / 启动问题
+description: 双击没反应、安装报错、装了但还是英文、游戏起不来
+title: "[安装] "
+labels: ["install"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **先看这三条**：
+        1. 游戏要能从 Steam 正常启动一次（纯单机，正版）
+        2. 装在 `C:\Program Files` 下需要**右键 → 以管理员身份运行**
+        3. 杀软可能删掉 `winhttp.dll`（注入器），需要加排除
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 提问前确认（必须勾选）
+      options:
+        - label: 我解压了补丁包，是在**解压出来的文件夹**里双击「安装汉化.bat」，不是压缩包内
+          required: true
+        - label: 我读过「使用说明.txt」第四节的排查步骤
+          required: true
+        - label: 我在 Issues 里搜过报错文字，没有重复
+          required: true
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: 卡在哪一步？
+      options:
+        - 双击「安装汉化.bat」没反应（窗口一闪而过）
+        - 安装脚本报错
+        - 提示找不到游戏 / 路径不对
+        - 装完了，但游戏里还是英文
+        - 游戏启动就崩溃 / 黑屏
+        - 游戏能开，但汉化只在部分界面生效
+        - 其它（下面说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: 报错内容 / 现象（尽量原样抄）
+      description: 报错窗口的文字、或者游戏崩溃时的提示
+      placeholder: 例：Access to the path 'D:\...\winhttp.dll' is denied.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: path
+    attributes:
+      label: 游戏安装在哪里？
+      options:
+        - 普通盘（D:\ / E:\ / F:\ 等）
+        - C:\Program Files 或 Program Files (x86)
+        - 中文路径 / 带空格的路径
+        - 不确定
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: 系统
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows 8.1 或更旧
+        - 其它 / 不确定
+    validations:
+      required: true
+
+  - type: input
+    id: antivirus
+    attributes:
+      label: 装了什么杀毒软件？
+      placeholder: 火绒 / 360 / 卡巴斯基 / Windows Defender / 无
+    validations:
+      required: false
+
+  - type: textarea
+    id: log
+    attributes:
+      label: BepInEx\LogOutput.log（有就拖进来，没有就写“没有”）
+      description: 位置：<游戏目录>\BepInEx\LogOutput.log。游戏没启动成功时这个文件可能不存在，属正常，直接写“没有”。
+      placeholder: 拖文件进来，或写：没有
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图（可选）
+      description: 报错窗口、安装脚本最后的输出
+    validations:
+      required: false

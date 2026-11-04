@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ 常见问题 / 自查清单（先看这里）
+    url: https://github.com/box-26/PIGFACE-zh/issues/1
+    about: 90% 的问题在这里能解决：中文晚一拍、故意不译的词、杀软报毒、更新后失效
+  - name: 📖 使用说明（安装 / 卸载 / 常见情况）
+    url: https://github.com/box-26/PIGFACE-zh/blob/main/packaging/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.txt
+    about: 安装步骤、卸载方式、各种情况下会怎样

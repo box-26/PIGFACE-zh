@@ -1,0 +1,42 @@
+name: 其它 / 建议
+description: 译法意见、文档错误、功能想法，或不属于上面任何一类的问题
+title: "[其它] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        这里不限制格式，写清楚就行。
+        如果是**某句译文不好**，请把英文原文和现在的译法都写上，方便对照。
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 属于哪一类？
+      options:
+        - 译法建议（某句可以更好）
+        - 文档写错了 / 看不明白
+        - 功能想法
+        - 想参与维护
+        - 其它
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: 具体内容
+      placeholder: |
+        例：
+        英文：Good work, head back to the van.
+        现译：干得漂亮。回面包车。
+        建议：干得好，回车上吧。因为这句是随口说的，不像命令。
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图 / 补充（可选）
+    validations:
+      required: false
