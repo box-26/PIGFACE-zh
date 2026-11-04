@@ -123,9 +123,9 @@ namespace PigfaceCN
         {
             try
             {
+#if PIGFACE_DEBUG
                 if (Input.GetKeyDown(KeyCode.F9)) StartCoroutine(DumpScreen());
                 if (Input.GetKeyDown(KeyCode.F10)) StartCoroutine(TestRender());
-#if PIGFACE_DEBUG
                 if (Input.GetKeyDown(KeyCode.F8)) DumpObjectives();
                 if (Input.GetKeyDown(KeyCode.F7)) CompleteObjectives();
 #endif
@@ -222,6 +222,7 @@ namespace PigfaceCN
         }
 #endif
 
+#if PIGFACE_DEBUG
         IEnumerator DumpScreen()
         {
             string stamp = DateTime.Now.ToString("HHmmss");
@@ -348,6 +349,8 @@ namespace PigfaceCN
             yield return new WaitForSecondsRealtime(6f);
             UnityEngine.Object.Destroy(root);
         }
+
+#endif
 
         IEnumerator ScanLoop()
         {

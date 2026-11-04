@@ -22,6 +22,18 @@ $bad = @($zip.Entries | Where-Object { $_.Name -match '^(game_path\.txt|seen\.tx
 $count = $zip.Entries.Count
 $zip.Dispose()
 if ($bad.Count -gt 0) { Write-Host ("FORBIDDEN FILES STILL PRESENT: " + ($bad.Name -join ', ')); exit 1 }
+
+# Debug features must not exist in the shipped DLL at all (they are compiled out
+# with #if PIGFACE_DEBUG). If any of these symbols is present, the build is wrong.
+$dll = Join-Path $Source 'BepInEx\plugins\PigfaceCN\PigfaceCN.dll'
+if (-not (Test-Path $dll)) { Write-Host "MISSING PigfaceCN.dll"; exit 1 }
+$ascii = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($dll))
+$debugSymbols = @('CompleteObjectives', 'DumpObjectives', 'DumpScreen', 'TestRender', 'PIGFACE_DEBUG')
+$leaked = @($debugSymbols | Where-Object { $ascii.Contains($_) })
+if ($leaked.Count -gt 0) {
+    Write-Host ("DEBUG SYMBOLS IN RELEASE BUILD: " + ($leaked -join ', ') + " -> rebuild without -p:DefineConstants=PIGFACE_DEBUG")
+    exit 1
+}
 Write-Host ("packed " + $count + " files -> " + $Out)
 Write-Host ("size " + (Get-Item $Out).Length)
 Write-Host ("sha256 " + (Get-FileHash $Out -Algorithm SHA256).Hash)
