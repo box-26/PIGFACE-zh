@@ -3,7 +3,7 @@
     [string]$Out    = "D:\AI-Workspace\release\PIGFACE-zh-v1.6.zip"
 )
 $ErrorActionPreference = 'Stop'
-$forbidden = @('game_path.txt', 'seen.txt', 'miss.log', 'debug.flag', 'LogOutput.log')
+$forbidden = @('game_path.txt', 'seen.txt', 'miss.log', 'debug.flag', 'LogOutput.log', '缺词报告.txt', 'missing_report.txt')
 foreach ($f in $forbidden) {
     $p = Join-Path $Source $f
     if (Test-Path $p) { Remove-Item $p -Force; Write-Host "removed $f" }
