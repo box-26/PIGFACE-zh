@@ -1,4 +1,4 @@
-param([string]$GamePath)
+﻿param([string]$GamePath)
 $ErrorActionPreference = 'Stop'
 
 function Find-Pigface {
