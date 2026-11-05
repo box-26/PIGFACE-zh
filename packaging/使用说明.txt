@@ -1,4 +1,4 @@
-PIGFACE 简体中文汉化补丁  v1.8
+PIGFACE 简体中文汉化补丁  v1.8.1
 Steam 正版 / Windows / 纯单机
 更新与反馈：https://github.com/box-26/PIGFACE-zh
 

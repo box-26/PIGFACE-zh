@@ -15,7 +15,7 @@ using UGlyphRect = UnityEngine.TextCore.GlyphRect;
 
 namespace PigfaceCN
 {
-    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.8.0")]
+    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.8.1")]
     public class Plugin : BaseUnityPlugin
     {
         internal static BepInEx.Logging.ManualLogSource Log;
@@ -34,7 +34,7 @@ namespace PigfaceCN
             Directory.CreateDirectory(OutDir);
             Writer = new StreamWriter(Path.Combine(OutDir, "seen.txt"), true, new UTF8Encoding(false));
             Writer.AutoFlush = true;
-            Log.LogInfo("PigfaceCN v1.8 starting");
+            Log.LogInfo("PigfaceCN v1.8.1 starting");
             Log.LogInfo("repo: https://github.com/box-26/PIGFACE-zh");
 
             try { LoadDict(); } catch (Exception e) { Log.LogError("load dict: " + e); }
