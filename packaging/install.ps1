@@ -135,8 +135,8 @@ if ($bad.Count -gt 0) {
 
 if ($ok.Count -gt 0) {
     Write-Host ""
-    Write-Host "  请从 Steam 库启动 PIGFACE（不要直接双击 Pigface.exe，" -ForegroundColor Yellow
-    Write-Host "  否则不计入成就与云存档）。" -ForegroundColor Yellow
+    Write-Host "  建议从 Steam 库启动 PIGFACE。" -ForegroundColor Yellow
+    Write-Host "  （个别情况下直接双击 exe 可能不计成就与云存档）" -ForegroundColor DarkGray
 }
 
 Write-Host ""
