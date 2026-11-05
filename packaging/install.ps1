@@ -124,8 +124,6 @@ if ($ok.Count -gt 0) {
     Write-Host ("  安装成功 {0} 份：" -f $ok.Count) -ForegroundColor Green
     foreach ($g in $ok) { Write-Host ("   - {0}" -f $g) -ForegroundColor Green }
     Write-Host ""
-    Write-Host "  以后从 Steam 正常启动游戏就是中文了。"
-    Write-Host ""
     Write-Host "  项目主页：https://github.com/box-26/PIGFACE-zh" -ForegroundColor Cyan
     Write-Host '  漏翻/错译请到上面的 Issues 反馈：双击 检查缺词.bat 生成 缺词报告.txt 附上即可。' -ForegroundColor DarkGray
 }
@@ -135,10 +133,10 @@ if ($bad.Count -gt 0) {
     foreach ($b in $bad) { Write-Host ("   - {0}" -f $b) -ForegroundColor Yellow }
 }
 
-if ($ok.Count -eq 1) {
+if ($ok.Count -gt 0) {
     Write-Host ""
-    $ans = Read-Host "  现在启动游戏看看？(Y/N)"
-    if ($ans -match '^(y|Y)') { Start-Process (Join-Path $ok[0] 'Pigface.exe') }
+    Write-Host "  请从 Steam 库启动 PIGFACE（不要直接双击 Pigface.exe，" -ForegroundColor Yellow
+    Write-Host "  否则不计入成就与云存档）。" -ForegroundColor Yellow
 }
 
 Write-Host ""
