@@ -52,7 +52,7 @@ special	特殊
 read me	说明
 continue	继续
 controls	操作
-interact	互动
+interact	交互
 invert x	反转 X
 invert y	反转 Y
 players:	玩家：
@@ -636,7 +636,7 @@ survive the combat test	在战斗测试中活下来
 (optional) kill enemies with spike walls/barrels	（可选）用尖刺墙或油桶杀敌
 play through the introduction and run through the combat test again with a fresh set of bodies.	重玩一遍开场，用一批全新的身体再走一次战斗测试。
 play through the introduction and run through the combat test again with a fresh set of bodies	重玩一遍开场，用一批全新的身体再走一次战斗测试
-kick	踢
+kick	踢击
 drop	丢弃
 aim	瞄准
 ui	界面
@@ -981,3 +981,7 @@ rifle ammo	步枪弹药
 pistol ammo	手枪弹药
 shotgun ammo	霰弹
 smg ammo	冲锋枪弹药
+assignment conflict	按键冲突
+control + alt	Ctrl + Alt
+move	移动
+use	使用

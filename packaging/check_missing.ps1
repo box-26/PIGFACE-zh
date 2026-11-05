@@ -3,28 +3,36 @@ $ErrorActionPreference = 'Stop'
 
 function Find-Pigface {
     param([string]$Hint)
-    if ($Hint -and (Test-Path (Join-Path $Hint 'Pigface.exe'))) { return $Hint }
+
+    $cands = New-Object System.Collections.ArrayList
+    $add = {
+        param($dir)
+        if (-not $dir) { return }
+        if (-not (Test-Path (Join-Path $dir 'Pigface.exe'))) { return }
+        try { $full = (Resolve-Path -LiteralPath $dir).Path } catch { return }
+        if (-not ($cands -contains $full)) { [void]$cands.Add($full) }
+    }
+
+    if ($Hint) { & $add $Hint }
     $gp = Join-Path $PSScriptRoot 'game_path.txt'
     if (Test-Path $gp) {
         $t = (Get-Content -LiteralPath $gp -Encoding UTF8 | Select-Object -First 1).Trim()
-        if ($t -and (Test-Path (Join-Path $t 'Pigface.exe'))) { return $t }
+        if ($t) { & $add $t }
     }
     foreach ($c in @('E:\SteamLibrary\steamapps\common\PIGFACE','D:\SteamLibrary\steamapps\common\PIGFACE','C:\SteamLibrary\steamapps\common\PIGFACE','C:\Program Files (x86)\Steam\steamapps\common\PIGFACE','C:\Program Files\Steam\steamapps\common\PIGFACE')) {
-        if (Test-Path (Join-Path $c 'Pigface.exe')) { return $c }
+        & $add $c
     }
     foreach ($k in @('HKCU:\Software\Valve\Steam','HKLM:\SOFTWARE\WOW6432Node\Valve\Steam','HKLM:\SOFTWARE\Valve\Steam')) {
         try {
-            $p = (Get-ItemProperty -Path $k -ErrorAction Stop).SteamPath
-            if ($p) {
-                $p = $p -replace '/','\'
-                $cand = Join-Path $p 'steamapps\common\PIGFACE'
-                if (Test-Path (Join-Path $cand 'Pigface.exe')) { return $cand }
-                $vdf = Join-Path $p 'steamapps\libraryfolders.vdf'
+            $sp = (Get-ItemProperty -Path $k -ErrorAction Stop).SteamPath
+            if ($sp) {
+                $sp = $sp -replace '/','\'
+                & $add (Join-Path $sp 'steamapps\common\PIGFACE')
+                $vdf = Join-Path $sp 'steamapps\libraryfolders.vdf'
                 if (Test-Path $vdf) {
                     foreach ($m in [regex]::Matches((Get-Content $vdf -Raw), '"path"\s+"([^"]+)"')) {
                         $lib = $m.Groups[1].Value -replace '\\\\','\'
-                        $cand = Join-Path $lib 'steamapps\common\PIGFACE'
-                        if (Test-Path (Join-Path $cand 'Pigface.exe')) { return $cand }
+                        & $add (Join-Path $lib 'steamapps\common\PIGFACE')
                     }
                 }
             }
@@ -35,24 +43,34 @@ function Find-Pigface {
         if ($d.DriveType -ne 'Fixed' -and $d.DriveType -ne 'Removable') { continue }
         $root = $d.RootDirectory.FullName
         foreach ($sub in @('SteamLibrary\steamapps\common\PIGFACE','Steam\steamapps\common\PIGFACE','Program Files (x86)\Steam\steamapps\common\PIGFACE','Program Files\Steam\steamapps\common\PIGFACE','Games\PIGFACE','PIGFACE')) {
-            $cand = Join-Path $root $sub
-            if (Test-Path (Join-Path $cand 'Pigface.exe')) { return $cand }
-        }
-        foreach ($sub in @('SteamLibrary','Steam','Games')) {
-            $base = Join-Path $root $sub
-            if (-not (Test-Path $base)) { continue }
-            $cand = Join-Path $base 'steamapps\common\PIGFACE'
-            if (Test-Path (Join-Path $cand 'Pigface.exe')) { return $cand }
+            & $add (Join-Path $root $sub)
         }
         try {
-            foreach ($hit in (Get-ChildItem -LiteralPath $root -Directory -Depth 2 -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq 'PIGFACE' })) {
+            foreach ($hit in (Get-ChildItem -LiteralPath $root -Directory -Depth 2 -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'PIGFACE*' })) {
                 $seen++
                 if ($seen -gt 4000) { break }
-                if (Test-Path (Join-Path $hit.FullName 'Pigface.exe')) { return $hit.FullName }
+                & $add $hit.FullName
             }
         } catch { }
     }
-    return $null
+
+    if ($cands.Count -eq 0) { return $null }
+
+    $scored = foreach ($c in $cands) {
+        $miss = Join-Path $c 'BepInEx\PigfaceCN\miss.log'
+        $log  = Join-Path $c 'BepInEx\LogOutput.log'
+        $has = -1; $t = [datetime]::MinValue
+        if (Test-Path $miss) { $has = 1; $t = (Get-Item $miss).LastWriteTime }
+        elseif (Test-Path $log) { $has = 0; $t = (Get-Item $log).LastWriteTime }
+        $isSteam = if ($c -match '\\steamapps\\common\\') { 1 } else { 0 }
+        [pscustomobject]@{ Path = $c; Has = $has; Time = $t; Steam = $isSteam }
+    }
+    $best = $scored | Sort-Object -Property @{ Expression = 'Has'; Descending = $true }, @{ Expression = 'Time'; Descending = $true }, @{ Expression = 'Steam'; Descending = $true } | Select-Object -First 1
+    if ($scored.Count -gt 1) {
+        Write-Host ("  机器上有 {0} 份 PIGFACE，用的是最近玩过的那份：" -f $scored.Count)
+        Write-Host ("  {0}" -f $best.Path)
+    }
+    return $best.Path
 }
 
 $GamePath = Find-Pigface $GamePath
@@ -140,9 +158,45 @@ if (Test-Path $miss) {
     }
 }
 
+# 词库已经收录的句子不必再报：按键图标统一按 <sprite> 比较，换行统一。
+function N([string]$s) {
+    if (-not $s) { return '' }
+    $x = $s -replace '<sprite[^>]*>', '<sprite>'
+    $x = $x -replace '\\n', "`n" -replace '\\r', "`r"
+    $x = ($x -replace '\s+', ' ').Trim().ToLowerInvariant()
+    return $x
+}
+$dictSet = @{}
+if (Test-Path $dict) {
+    foreach ($ln in [System.IO.File]::ReadAllLines($dict, [System.Text.Encoding]::UTF8)) {
+        if (-not $ln) { continue }
+        $tab = $ln.IndexOf("`t")
+        if ($tab -lt 1) { continue }
+        $dictSet[(N $ln.Substring(0, $tab))] = 1
+    }
+}
+# 这些是插件按模式翻译的（键位提示、拾取提示、任务提示……），词库里没有整句，跳过。
+$patternSkip = @(
+    '^press .*to assign it to',
+    '^now press .*to assign it to',
+    'is already in use\. do you want to replace it',
+    '^\d[\d,]* .+ picked up$',
+    '.+ job accepted$',
+    '.+ mask found!$',
+    '^.+ \(x\d+\)$',
+    '^\+ .+ (blueprints?|schematics?) unlocked!$',
+    '^[^<]+<br>\s*<br>'
+)
+$skipped = 0
+$skippedPattern = 0
 $byText = @{}
 foreach ($e in $entries) {
     $t = $e[1]
+    $tn = (N $t)
+    if ($dictSet.Count -gt 0 -and $dictSet.ContainsKey($tn)) { $skipped++; continue }
+    $hit = $false
+    foreach ($ps in $patternSkip) { if ($tn -match $ps) { $hit = $true; break } }
+    if ($hit) { $skippedPattern++; continue }
     if (-not $byText.ContainsKey($t)) { $byText[$t] = @{ n = 0; path = $e[0] } }
     $byText[$t].n = $byText[$t].n + 1
 }
@@ -175,7 +229,7 @@ $out.Add("其它 BepInEx 插件：$otherLine")
 $out.Add("杀毒软件：$avLine")
 $out.Add("安装位置：路径含中文=$flagCjk，含空格=$flagSpc，在 Program Files=$flagPf")
 $out.Add("注意：以上环境信息由系统接口自动读取，可能不完全准确（例如杀软卸载后仍有残留登记），仅供参考。")
-$out.Add("记录条数：$($entries.Count) 条（去重后 $($byText.Count) 条）")
+$out.Add("记录条数：$($entries.Count) 条（去重后 $($byText.Count) 条；另有 $skipped 条已被词库收录、$skippedPattern 条由插件按规则处理，均不再列出）")
 $out.Add('')
 $out.Add('说明：这里只记录插件没翻出来的句子。人名/专名（allow.txt）与技术串')
 $out.Add('      （版本号、分辨率、SSAO/FPS 等）在写入日志前就已跳过，不会出现在下面；')

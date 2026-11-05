@@ -869,6 +869,17 @@ namespace PigfaceCN
                     zh = "按下要绑定的键：" + key + "。也可加按修饰键；只想绑修饰键，按住 1 秒。";
                     return true;
                 }
+                var am2 = System.Text.RegularExpressions.Regex.Match(t,
+                    @"^(?:now\s+)?press\s+(?:a key|a mouse button or move an axis|a button or move an axis)\s+to assign it to\s+(?<k>.+?)\.?$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (am2.Success)
+                {
+                    string keyZh;
+                    string key = am2.Groups["k"].Value.Trim();
+                    if (TryLookup(key, out keyZh)) key = keyZh;
+                    zh = "按下要绑定的键：" + key;
+                    return true;
+                }
                 var cm = System.Text.RegularExpressions.Regex.Match(t,
                     @"^(?<k>.+?) is already in use\.\s*do you want to replace it\?\s*you may also choose to add the assignment anyway\.?$",
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
