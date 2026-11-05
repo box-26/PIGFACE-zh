@@ -819,11 +819,23 @@ namespace PigfaceCN
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                 if (pm.Success)
                 {
+                    string item = pm.Groups["item"].Value;
                     string itemZh;
-                    if (TryLookup(pm.Groups["item"].Value, out itemZh))
+                    if (TryLookup(item, out itemZh))
                     {
                         zh = "捡起 " + itemZh + " ×" + pm.Groups["n"].Value;
                         return true;
+                    }
+                    // "32 TEC-9 ammo picked up": the item is "<weapon> ammo".
+                    if (item.EndsWith(" ammo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string head = item.Substring(0, item.Length - 5).Trim();
+                        string headZh;
+                        if (head.Length > 0 && TryLookup(head, out headZh))
+                        {
+                            zh = "捡起 " + headZh + " 弹药 ×" + pm.Groups["n"].Value;
+                            return true;
+                        }
                     }
                 }
             }
@@ -842,6 +854,34 @@ namespace PigfaceCN
                     }
                 }
             }
+            // Rewired control mapper (key rebinding) builds its prompts at runtime,
+            // so the surrounding words must be matched by pattern.
+            {
+                string t = s.Trim();
+                var am = System.Text.RegularExpressions.Regex.Match(t,
+                    @"^press a key to assign it to (?<k>.+?)\.\s*modifier keys may also be used\.\s*to assign a modifier key alone,? hold it down for 1 second\.?$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (am.Success)
+                {
+                    string keyZh;
+                    string key = am.Groups["k"].Value.Trim();
+                    if (TryLookup(key, out keyZh)) key = keyZh;
+                    zh = "按下要绑定的键：" + key + "。也可加按修饰键；只想绑修饰键，按住 1 秒。";
+                    return true;
+                }
+                var cm = System.Text.RegularExpressions.Regex.Match(t,
+                    @"^(?<k>.+?) is already in use\.\s*do you want to replace it\?\s*you may also choose to add the assignment anyway\.?$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (cm.Success)
+                {
+                    string keyZh;
+                    string key = cm.Groups["k"].Value.Trim();
+                    if (TryLookup(key, out keyZh)) key = keyZh;
+                    zh = key + " 已被占用。要替换吗？也可以仍然添加这个绑定。";
+                    return true;
+                }
+            }
+
             // Phone panel rows: "面具：SMILER", "护甲：BANDOLIER". The label is already
             // Chinese but the value is still a raw id, so translate the value alone.
             {
