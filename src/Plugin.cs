@@ -866,7 +866,7 @@ namespace PigfaceCN
                     string keyZh;
                     string key = am.Groups["k"].Value.Trim();
                     if (TryLookup(key, out keyZh)) key = keyZh;
-                    zh = "按下想分配给「" + key + "」的键。也可以搭配修饰键；只想绑修饰键，按住 1 秒。";
+                    zh = "按下想分配给“" + key + "”的键。也可以搭配修饰键；只想绑修饰键，按住 1 秒。";
                     return true;
                 }
                 var am2 = System.Text.RegularExpressions.Regex.Match(t,
