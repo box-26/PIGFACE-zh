@@ -18,7 +18,7 @@
 2. 双击 `安装汉化.bat`。
 3. 脚本会自动到 Steam 库里找 PIGFACE；找不到时按提示粘贴游戏路径
    （Steam 库 → 右键游戏 → 管理 → 浏览本地文件，复制地址栏）。
-4. 看到「安装成功」后，从 Steam 正常启动游戏。
+4. 看到“安装成功”后，从 Steam 正常启动游戏。
 
 装在 `C:\Program Files` 这类目录时需要管理员权限：右键 `安装汉化.bat` → 以管理员身份运行。
 
@@ -51,7 +51,7 @@
 | --- | --- |
 | 文本 | Harmony 钩住 `TMP_Text.set_text` / `SetText` / `UI.Text.set_text`，命中词典就换成中文；另有定时扫描兜底 |
 | 字体 | 运行时 `FontEngine.LoadFontFace(路径)` 读系统字体或包内 `font.ttf`，手工烘 SDF 图集构造 `TMP_FontAsset` |
-| 贴图 | 只替换商店那张 `SOLD OUT`（256×128）为「售罄」，沿用原 sprite 的 pivot / PPU / border |
+| 贴图 | 只替换商店那张 `SOLD OUT`（256×128）为“售罄”，沿用原 sprite 的 pivot / PPU / border |
 
 全部发生在内存里，**不写游戏目录的任何文件**。细节见 [docs/architecture.md](docs/architecture.md)。
 

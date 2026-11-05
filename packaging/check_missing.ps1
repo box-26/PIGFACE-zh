@@ -1,4 +1,4 @@
-﻿param([string]$GamePath)
+param([string]$GamePath)
 $ErrorActionPreference = 'Stop'
 
 function Find-Pigface {
@@ -177,8 +177,9 @@ $out.Add("安装位置：路径含中文=$flagCjk，含空格=$flagSpc，在 Pro
 $out.Add("注意：以上环境信息由系统接口自动读取，可能不完全准确（例如杀软卸载后仍有残留登记），仅供参考。")
 $out.Add("记录条数：$($entries.Count) 条（去重后 $($byText.Count) 条）")
 $out.Add('')
-$out.Add('说明：这里只记录“插件真的没翻出来”的句子。人名（allow.txt）和技术串')
-$out.Add('      （版本号、分辨率、SSAO/FPS）已被排除，正常情况下不会有误报。')
+$out.Add('说明：这里只记录插件没翻出来的句子。人名/专名（allow.txt）与技术串')
+$out.Add('      （版本号、分辨率、SSAO/FPS 等）在写入日志前就已跳过，不会出现在下面；')
+$out.Add('      个别界面元素仍可能被误判，看到时忽略即可。')
 $out.Add('')
 if ($byText.Count -eq 0) {
     $out.Add('恭喜：这次没有发现漏翻的句子。')

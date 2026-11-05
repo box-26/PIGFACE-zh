@@ -15,7 +15,7 @@ using UGlyphRect = UnityEngine.TextCore.GlyphRect;
 
 namespace PigfaceCN
 {
-    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.7.0")]
+    [BepInPlugin("pigface.cn.font", "PigfaceCN", "1.8.0")]
     public class Plugin : BaseUnityPlugin
     {
         internal static BepInEx.Logging.ManualLogSource Log;
@@ -34,7 +34,7 @@ namespace PigfaceCN
             Directory.CreateDirectory(OutDir);
             Writer = new StreamWriter(Path.Combine(OutDir, "seen.txt"), true, new UTF8Encoding(false));
             Writer.AutoFlush = true;
-            Log.LogInfo("PigfaceCN v1.7 starting");
+            Log.LogInfo("PigfaceCN v1.8 starting");
             Log.LogInfo("repo: https://github.com/box-26/PIGFACE-zh");
 
             try { LoadDict(); } catch (Exception e) { Log.LogError("load dict: " + e); }
@@ -636,8 +636,8 @@ namespace PigfaceCN
                 if (string.IsNullOrEmpty(raw)) continue;
                 int t = raw.IndexOf('\t');
                 if (t <= 0) continue;
-                string en = Norm(raw.Substring(0, t).Replace("\\n", "\n").Replace("\\r", "\r"));
-                string zh = raw.Substring(t + 1).Replace("\\n", "\n").Replace("\\r", "\r");
+                string en = Norm(Spriteize(raw.Substring(0, t).Replace("\\n", "\n").Replace("\\r", "\r")));
+                string zh = Spriteize(raw.Substring(t + 1).Replace("\\n", "\n").Replace("\\r", "\r"));
                 if (en.Length == 0) continue;
                 Dict[en] = zh;
                 n++;
@@ -653,8 +653,8 @@ namespace PigfaceCN
                     if (string.IsNullOrEmpty(raw)) continue;
                     int t = raw.IndexOf('\t');
                     if (t <= 0) continue;
-                    string src = raw.Substring(0, t).Replace("\\n", "\n");
-                    string dst = raw.Substring(t + 1).Replace("\\n", "\n");
+                    string src = Spriteize(raw.Substring(0, t).Replace("\\n", "\n"));
+                    string dst = Spriteize(raw.Substring(t + 1).Replace("\\n", "\n"));
                     if (src.Length == 0) continue;
                     Frag.Add(new KeyValuePair<string, string>(src, dst));
                 }
@@ -685,7 +685,53 @@ namespace PigfaceCN
                 return m.Value;
             });
         }
+        // Keybinding prompts embed a live sprite tag ("press <sprite name="controller/keyboard/tab"> ...").
+        // Rebinding the key replaces the sprite name, so the stored key would never match again.
+        // Collapse every sprite tag to one placeholder before lookup, then put the real tags back.
+        static readonly System.Text.RegularExpressions.Regex SpriteTag =
+            new System.Text.RegularExpressions.Regex("<sprite\\s+[^>]*>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        static readonly System.Text.RegularExpressions.Regex SpriteHole =
+            new System.Text.RegularExpressions.Regex("<sprite>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        internal static string Spriteize(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            if (s.IndexOf("<sprite", StringComparison.OrdinalIgnoreCase) < 0) return s;
+            return SpriteTag.Replace(s, "<sprite>");
+        }
+
+        static string RestoreSprites(string zh, string raw)
+        {
+            if (zh == null || zh.IndexOf("<sprite>", StringComparison.OrdinalIgnoreCase) < 0) return zh;
+            var tags = new List<string>();
+            if (!string.IsNullOrEmpty(raw))
+                foreach (System.Text.RegularExpressions.Match m in SpriteTag.Matches(raw)) tags.Add(m.Value);
+            int i = 0;
+            return SpriteHole.Replace(zh, delegate (System.Text.RegularExpressions.Match m)
+            {
+                string t = i < tags.Count ? tags[i] : "";
+                i++;
+                return t;
+            });
+        }
+
         internal static bool TryLookup(string s, out string zh)
+        {
+            zh = null;
+            if (string.IsNullOrEmpty(s)) return false;
+            string folded = Spriteize(s);
+            if (!ReferenceEquals(folded, s))
+            {
+                if (!TryLookupCore(folded, out zh)) return false;
+                zh = RestoreSprites(zh, s);
+                return true;
+            }
+            return TryLookupCore(s, out zh);
+        }
+
+        static bool TryLookupCore(string s, out string zh)
         {
             zh = null;
             if (s == null) return false;

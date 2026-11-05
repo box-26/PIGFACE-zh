@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$GamePath = (Join-Path $PSScriptRoot '..\..\PIGFACE-zh'),
     [int]$Sec = 30,
     [string]$Extra = ""
