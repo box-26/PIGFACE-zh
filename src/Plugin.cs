@@ -1079,8 +1079,17 @@ namespace PigfaceCN
                         if (c < 128) continue;
                         if (set.Add(c)) sb.Append(c);
                     }
+            foreach (char c in RuleChars)
+                if (set.Add(c)) sb.Append(c);
             return sb.ToString();
         }
+
+                // Characters that only appear in the rule-generated strings below
+        // (e.g. 已解锁, （可选）). Without them the subset font shows boxes.
+        internal static readonly string RuleChars =
+            "»×。下个也人仍以任住修具出到加务动半占受只可合吗品图好子定属已弹很想找" +
+            "把护按捡换接敲文普替本来枪步浆测添然现用甲的秒纸绑脑自药蓝被要解试起这适" +
+            "选通金锁锤键面饰！（），：；？";
 
         static void InstallFallback()
         {

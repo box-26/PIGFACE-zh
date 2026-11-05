@@ -35,18 +35,33 @@ def dict_chars(paths):
     return chars
 
 
+def src_chars(paths):
+    chars = set()
+    for path in paths:
+        if not os.path.exists(path):
+            continue
+        with io.open(path, encoding="utf-8", errors="ignore") as fh:
+            data = fh.read()
+        for ch in data:
+            if ord(ch) > 127:
+                chars.add(ch)
+    return chars
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--font", default=os.path.join(HERE, "out", "font.ttf"))
     ap.add_argument("--dict", nargs="*",
                     default=[os.path.join(HERE, "out", "zh.tsv"),
                              os.path.join(HERE, "out", "frag.tsv")])
+    ap.add_argument("--src", nargs="*",
+                    default=[os.path.join(HERE, "src", "Plugin.cs")])
     args = ap.parse_args()
 
     if not os.path.exists(args.font):
         sys.exit("font not found: %s\nrun tools/make_font.py first, or pass --font" % args.font)
 
-    wanted = dict_chars(args.dict)
+    wanted = dict_chars(args.dict) | src_chars(args.src)
     font = TTFont(args.font, fontNumber=0)
     have = set()
     for table in font["cmap"].tables:
