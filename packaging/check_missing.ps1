@@ -19,7 +19,7 @@ if ($targets.Count -eq 0) {
     exit 1
 }
 
-function New-Report([string]$GamePath) {
+function New-Report([string]$GamePath, [switch]$NoEnv) {
 $miss = Join-Path $GamePath 'BepInEx\PigfaceCN\miss.log'
 $dict = Join-Path $GamePath 'BepInEx\plugins\PigfaceCN\zh.tsv'
 if (-not (Test-Path $dict)) { $dict = Join-Path $GamePath 'BepInEx\PigfaceCN\zh.tsv' }
@@ -29,7 +29,7 @@ $vf = Join-Path $PSScriptRoot 'VERSION.txt'
 if (Test-Path $vf) { $ver = (Get-Content -LiteralPath $vf -Encoding UTF8 | Select-Object -First 1).Trim() }
 $dictCount = 0
 if (Test-Path $dict) { $dictCount = (Get-Content -LiteralPath $dict -Encoding UTF8 | Where-Object { $_.Trim() -ne '' }).Count }
-$gameVer = 'unknown'
+$gameVer = '无 Steam 记录（副本）'
 try {
     $acf = Join-Path (Split-Path (Split-Path $GamePath -Parent) -Parent) 'appmanifest_3341650.acf'
     if (Test-Path $acf) {
@@ -39,12 +39,13 @@ try {
 } catch { }
 
 # ---- 环境信息（只取不含隐私的项）----
-$osLine = 'Windows (unknown)'
+$osLine = (($os.Caption -replace '^Microsoft\s+', '') + ' ' + $(if ($os.OSArchitecture -like '*64*') { '64 位' } else { '32 位' }))
 try {
     $osv = [System.Environment]::OSVersion.Version
     $cap = ''
     try { $cap = (Get-CimInstance Win32_OperatingSystem -ErrorAction Stop).Caption } catch { $cap = 'Windows' }
-    $osLine = "$cap $($osv.Major).$($osv.Minor).$($osv.Build) [$env:PROCESSOR_ARCHITECTURE]"
+    $arch = if ($env:PROCESSOR_ARCHITECTURE -like '*64*') { '64 位' } else { '32 位' }
+    $osLine = (($cap -replace '^Microsoft\s+', '') + ' ' + $arch)
 } catch { }
 
 $resLine = 'unknown'
@@ -145,66 +146,60 @@ foreach ($e in $entries) {
 
 # ---- 生成报告 ----
 $out = New-Object System.Collections.Generic.List[string]
-$out.Add('PIGFACE 简体中文汉化 - 缺词报告')
-$out.Add('====================================================')
+$out.Add('PIGFACE 汉化 缺词报告')
 $out.Add('')
-$out.Add('【这份报告包含什么】')
-$out.Add('  Windows 版本与位数、屏幕分辨率、补丁版本与词库条数、游戏 Steam buildid、')
-$out.Add('  插件实际加载的字体、是否装了其它 BepInEx 插件、杀毒软件产品名（只读取名字，已卸载但残留登记的会被剔除）、')
-$out.Add('  漏翻句子的原文，以及它出现在哪个界面。')
-$out.Add('')
-$out.Add('【这份报告不包含什么】')
-$out.Add('  你的用户名、电脑名、IP/MAC 地址、Steam 账号、邮箱、游戏完整路径、存档内容。')
-$out.Add('  安装位置只记录三个“是/否”：路径含中文、含空格、在 Program Files。')
-$out.Add('')
-$out.Add('【发不发都行】')
-$out.Add('  发出来能帮作者补词；不发也不影响补丁正常使用，删掉本文件即可。')
-$out.Add('')
-$out.Add('----------------------------------------------------')
-$out.Add("补丁版本：v$ver（词库 $dictCount 条）")
-$out.Add("游戏版本：$gameVer")
-$out.Add("生成时间：" + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))
-$out.Add("系统：$osLine")
-$out.Add("分辨率：$resLine")
-$out.Add("字体：$fontLine")
-$out.Add("其它 BepInEx 插件：$otherLine")
-$out.Add("杀毒软件：$avLine")
-$out.Add("安装位置：路径含中文=$flagCjk，含空格=$flagSpc，在 Program Files=$flagPf")
-$out.Add("注意：以上环境信息由系统接口自动读取，可能不完全准确（例如杀软卸载后仍有残留登记），仅供参考。")
-$out.Add("记录条数：$($entries.Count) 条（去重后 $($byText.Count) 条；另有 $skipped 条已被词库收录、$skippedPattern 条由插件按规则处理，均不再列出）")
-$out.Add('')
-$out.Add('说明：这里只记录插件没翻出来的句子。人名/专名（allow.txt）与技术串')
-$out.Add('      （版本号、分辨率、SSAO/FPS 等）在写入日志前就已跳过，不会出现在下面；')
-$out.Add('      个别界面元素仍可能被误判，看到时忽略即可。')
+if (-not $NoEnv) {
+    $out.Add("系统     $osLine")
+    $out.Add("屏幕     $resLine")
+    $out.Add("字体     $fontLine")
+    $out.Add("杀软     $avLine")
+    $out.Add("其它插件 $otherLine")
+    $out.Add("安装位置 含中文=$flagCjk 含空格=$flagSpc 在ProgramFiles=$flagPf")
+    $out.Add('')
+}
+$out.Add("补丁     v$ver（词库 $dictCount 条）")
+$out.Add("游戏     $gameVer")
+$out.Add("记录     $($entries.Count) 条，去重后 $($byText.Count) 条")
+$out.Add("         其中 $skipped 条词库已收录、$skippedPattern 条按规则处理")
 $out.Add('')
 if ($byText.Count -eq 0) {
-    $out.Add('恭喜：这次没有发现漏翻的句子。')
+    $out.Add('没有发现漏翻的句子。')
 } else {
-    $out.Add('---- 漏翻清单（按出现次数排序）----')
+    $out.Add('漏翻清单（按出现次数排序）')
+    $out.Add('')
     $n = 0
     foreach ($k in ($byText.Keys | Sort-Object { -$byText[$_].n })) {
         $n++
         $out.Add("$n. [$($byText[$k].n) 次] $k")
-        $out.Add("   位置：$($byText[$k].path)")
+        $out.Add("   位置 $($byText[$k].path)")
     }
 }
 $out.Add('')
-$out.Add('---- 原始 miss.log ----')
+$out.Add('说明：只列插件没翻出来的句子。人名（allow.txt）、')
+$out.Add('版本号、分辨率这类在写日志前就跳过了；个别界面')
+$out.Add('元素仍可能被误判，看到忽略即可。')
+$out.Add('')
+$out.Add('发不发都行：发出来能帮作者补词，不发不影响使用。')
+$out.Add('报告不含用户名、电脑名、完整路径和存档内容。')
+$out.Add('')
+$out.Add('—— 原始 miss.log ——')
 foreach ($e in $entries) { $out.Add("$($e[0])`t$($e[1])") }
-
 return [pscustomobject]@{ Lines = $out; Count = $byText.Count; Dict = $dictCount; Ver = $ver; Game = $GamePath }
 }
 
 $reports = New-Object System.Collections.Generic.List[object]
-foreach ($g in $targets) { $reports.Add((New-Report -GamePath $g)) }
+foreach ($g in $targets) { $reports.Add((New-Report -GamePath $g -NoEnv:($reports.Count -gt 0))) }
 
 $merged = New-Object System.Collections.Generic.List[string]
+$merged.Add('PIGFACE 汉化 缺词报告')
+$merged.Add('')
 foreach ($r in $reports) {
     if ($reports.Count -gt 1) {
-        $merged.Add("################  这一份：$($r.Game)  ################")
+        $merged.Add("【第 $($reports.IndexOf($r) + 1) 份】")
+        $merged.Add("路径 $($r.Game)")
         $merged.Add('')
     }
-    foreach ($line in $r.Lines) { $merged.Add($line) }
+    foreach ($line in ($r.Lines | Select-Object -Skip 2)) { $merged.Add($line) }
     $merged.Add('')
 }
 
