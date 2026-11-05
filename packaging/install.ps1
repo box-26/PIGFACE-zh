@@ -1,169 +1,51 @@
-﻿param([string]$TargetPath)
+﻿param([string]$TargetPath, [switch]$All)
 $ErrorActionPreference = 'Stop'
 $here = $PSScriptRoot
+. (Join-Path $here 'Pigface.Common.ps1')
+
 Write-Host ""
 Write-Host "  PIGFACE 中文汉化 - 安装程序" -ForegroundColor Cyan
 Write-Host "  ----------------------------------------" -ForegroundColor DarkGray
 Write-Host ""
 
-function Test-SteamGame([string]$dir) {
-    # A copy counts as "Steam" when an appmanifest for appid 3341650 sits in one
-    # of its parent folders (i.e. inside steamapps), or next to the exe itself.
-    $p = $dir
-    for ($i = 0; $i -lt 4 -and $p; $i++) {
-        if (Test-Path (Join-Path $p 'appmanifest_3341650.acf')) { return $true }
-        $parent = Split-Path $p -Parent
-        if (-not $parent -or $parent -eq $p) { break }
-        $p = $parent
-    }
-    return $false
-}
-
-function Find-Pigface {
-    # 1) explicit argument
-    if ($TargetPath) {
-        $t = $TargetPath.Trim().Trim('"')
-        if (Test-Path (Join-Path $t 'Pigface.exe')) { return $t }
-    }
-
-    # 2) the path the user picked last time
-    $memo = Join-Path $PSScriptRoot 'game_path.txt'
-    if (Test-Path $memo) {
-        $p = (Get-Content -LiteralPath $memo -Encoding UTF8 -ErrorAction SilentlyContinue | Select-Object -First 1)
-        if ($p) { $p = $p.Trim() }
-        if ($p -and (Test-Path (Join-Path $p 'Pigface.exe'))) { return $p }
-    }
-
-    $found = New-Object System.Collections.Generic.List[object]
-    $add = {
-        param([string]$dir)
-        if (-not $dir) { return }
-        if (-not (Test-Path (Join-Path $dir 'Pigface.exe'))) { return }
-        try { $full = [System.IO.Path]::GetFullPath($dir).TrimEnd('\') } catch { return }
-        foreach ($c in $found) { if ($c.Path -ieq $full) { return } }
-        $found.Add([pscustomobject]@{ Path = $full; Steam = (Test-SteamGame $full) })
-    }
-
-    # 3) Steam libraries listed in the registry
-    $steams = New-Object System.Collections.Generic.List[string]
-    foreach ($k in @('HKCU:\Software\Valve\Steam', 'HKLM:\SOFTWARE\WOW6432Node\Valve\Steam', 'HKLM:\SOFTWARE\Valve\Steam')) {
-        try {
-            $v = Get-ItemProperty $k -ErrorAction Stop
-            foreach ($name in @('SteamPath', 'InstallPath')) {
-                $sp = $v.$name
-                if ($sp) { $steams.Add(($sp -replace '/', '\')) }
-            }
-        } catch { }
-    }
-    foreach ($steam in $steams) {
-        & $add (Join-Path $steam 'steamapps\common\PIGFACE')
-        $vdf = Join-Path $steam 'steamapps\libraryfolders.vdf'
-        if (Test-Path $vdf) {
-            foreach ($line in Get-Content -LiteralPath $vdf -ErrorAction SilentlyContinue) {
-                $m = [regex]::Match($line, '"path"\s+"([^"]+)"')
-                if ($m.Success) {
-                    $lib = $m.Groups[1].Value.Replace('\\', '\')
-                    & $add (Join-Path $lib 'steamapps\common\PIGFACE')
-                }
-            }
-        }
-    }
-
-    # 4) walk every fixed/removable drive, at most three levels down
-    $skip = @('Windows', 'Program Files', 'Program Files (x86)', 'ProgramData',
-              '$Recycle.Bin', 'System Volume Information', 'Recovery', 'PerfLogs',
-              'Users', 'Windows.old', 'Config.Msi')
-    $visited = 0
-    $limit = 4000
-    $deadline = (Get-Date).AddSeconds(12)
-
-    foreach ($d in [System.IO.DriveInfo]::GetDrives()) {
-        if (-not $d.IsReady) { continue }
-        if ($d.DriveType -ne [System.IO.DriveType]::Fixed -and $d.DriveType -ne [System.IO.DriveType]::Removable) { continue }
-        $root = $d.Name
-        foreach ($g in @('SteamLibrary', 'Steam', 'Games', 'games')) {
-            & $add (Join-Path $root ($g + '\steamapps\common\PIGFACE'))
-        }
-        $lvl1 = @()
-        try { $lvl1 = Get-ChildItem -LiteralPath $root -Directory -Force -ErrorAction SilentlyContinue } catch { }
-        foreach ($a in $lvl1) {
-            if ($skip -contains $a.Name) { continue }
-            $visited++
-            if ($visited -gt $limit -or (Get-Date) -gt $deadline) { break }
-            & $add $a.FullName
-            & $add (Join-Path $a.FullName 'steamapps\common\PIGFACE')
-            $lvl2 = @()
-            try { $lvl2 = Get-ChildItem -LiteralPath $a.FullName -Directory -Force -ErrorAction SilentlyContinue } catch { }
-            foreach ($b in $lvl2) {
-                $visited++
-                if ($visited -gt $limit -or (Get-Date) -gt $deadline) { break }
-                & $add $b.FullName
-                & $add (Join-Path $b.FullName 'steamapps\common\PIGFACE')
-                $lvl3 = @()
-                try { $lvl3 = Get-ChildItem -LiteralPath $b.FullName -Directory -Force -ErrorAction SilentlyContinue } catch { }
-                foreach ($c in $lvl3) {
-                    $visited++
-                    if ($visited -gt $limit -or (Get-Date) -gt $deadline) { break }
-                    & $add $c.FullName
-                    & $add (Join-Path $c.FullName 'steamapps\common\PIGFACE')
-                }
-            }
-        }
-    }
-
-    if ($found.Count -eq 0) { return $null }
-
-    # Steam-registered copies win outright. Only ask when there is a real tie.
-    $steamOnes = @($found | Where-Object { $_.Steam })
-    $pool = @(if ($steamOnes.Count -gt 0) { $steamOnes } else { $found })
-    if ($pool.Count -eq 1) {
-        if ($found.Count -gt 1) {
-            Write-Host ("  已自动选中 Steam 库中的这份：{0}" -f $pool[0].Path) -ForegroundColor DarkGray
-        }
-        return $pool[0].Path
-    }
-
-    Write-Host ""
-    Write-Host ("  找到 {0} 个 PIGFACE：" -f $pool.Count) -ForegroundColor Yellow
-    for ($i = 0; $i -lt $pool.Count; $i++) {
-        $tag = if ($pool[$i].Steam) { '  (Steam 库)' } else { '' }
-        Write-Host ("    [{0}] {1}{2}" -f ($i + 1), $pool[$i].Path, $tag)
-    }
-    $ans = Read-Host "  输入编号，直接回车 = 1"
-    $idx = 0
-    if ($ans) { [void][int]::TryParse($ans.Trim(), [ref]$idx); $idx = $idx - 1 }
-    if ($idx -lt 0 -or $idx -ge $pool.Count) { $idx = 0 }
-    return $pool[$idx].Path
-}
-$game = Find-Pigface
-if (-not $game) {
+# ---- 找游戏 ----
+$targets = @(Resolve-PigfaceTargets -Hint $TargetPath -MemoFile (Join-Path $here 'game_path.txt') -All:$All)
+if ($targets.Count -eq 0) {
     Write-Host "  没自动找到游戏。" -ForegroundColor Yellow
     Write-Host "  请在 Steam 库里右键 PIGFACE -> 管理 -> 浏览本地文件，把地址栏的路径复制下来。"
     Write-Host ""
-    $game = Read-Host "  把路径粘贴到这里，然后回车"
-    if ($game) { $game = $game.Trim().Trim('"') }
+    $p = Read-Host "  把路径粘贴到这里，然后回车"
+    if ($p) { $targets = @($p.Trim().Trim('"')) }
 }
 
-if (-not $game -or -not (Test-Path (Join-Path $game 'Pigface.exe'))) {
+$games = New-Object System.Collections.Generic.List[string]
+foreach ($t in $targets) {
+    if (Test-GameDir $t) { $games.Add($t) }
+    else {
+        Write-Host ""
+        Write-Host ("  {0} 里没有 Pigface.exe，跳过。" -f $t) -ForegroundColor Red
+    }
+}
+if ($games.Count -eq 0) {
     Write-Host ""
-    Write-Host "  这个路径里没有 Pigface.exe，安装已取消。" -ForegroundColor Red
+    Write-Host "  没有可安装的游戏目录，安装已取消。" -ForegroundColor Red
     Write-Host ""
     Read-Host "  按回车关闭"
     exit 1
 }
 
-Set-Content -LiteralPath (Join-Path $here 'game_path.txt') -Value $game -Encoding UTF8
-Write-Host "  游戏目录: $game" -ForegroundColor Green
+Write-Host ""
+foreach ($g in $games) { Write-Host ("  目标：{0}" -f $g) -ForegroundColor Green }
 Write-Host ""
 
-# ---- environment self-check (warnings only, never blocks) ----
+# ---- 环境自检（只提示，不阻断）----
 $warn = New-Object System.Collections.Generic.List[string]
 try {
     $os = [System.Environment]::OSVersion.Version
     if ($os.Major -lt 10) { $warn.Add("系统不是 Windows 10/11（检测到 $($os.Major).$($os.Minor)），本补丁未在该系统验证过。") }
 } catch { }
 $fontsDir = Join-Path $env:WINDIR 'Fonts'
-$cjk = @('simhei.ttf','msyh.ttc','msyh.ttf','simsun.ttc','Deng.ttf') | Where-Object { Test-Path (Join-Path $fontsDir $_) }
+$cjk = @('simhei.ttf', 'msyh.ttc', 'msyh.ttf', 'simsun.ttc', 'Deng.ttf') | Where-Object { Test-Path (Join-Path $fontsDir $_) }
 if ($cjk.Count -eq 0 -and -not (Test-Path (Join-Path $here 'BepInEx\plugins\PigfaceCN\font.ttf'))) {
     $warn.Add("系统里没找到中文字体，界面会保持英文原样（不会出现方块）。")
 }
@@ -176,67 +58,87 @@ if ($warn.Count -gt 0) {
     Write-Host ""
 }
 
-$existing = Join-Path $game 'BepInEx'
-if (Test-Path $existing) {
-    $ours = Test-Path (Join-Path $existing 'plugins\PigfaceCN\PigfaceCN.dll')
-    if (-not $ours) {
-        Write-Host "  这个游戏目录里已经有一个别的 BepInEx（可能是别的 mod）。" -ForegroundColor Yellow
-        Write-Host "  为了不弄坏你现有的东西，安装已停止。"
-        Write-Host ""
-        Read-Host "  按回车关闭"
-        exit 1
+# ---- 逐个安装 ----
+$ok = New-Object System.Collections.Generic.List[string]
+$bad = New-Object System.Collections.Generic.List[string]
+
+foreach ($game in $games) {
+    Write-Host ("  [{0}] 正在处理…" -f $game) -ForegroundColor DarkGray
+
+    $existing = Join-Path $game 'BepInEx'
+    if (Test-Path $existing) {
+        $ours = Test-Path (Join-Path $existing 'plugins\PigfaceCN\PigfaceCN.dll')
+        if (-not $ours) {
+            Write-Host "    这个目录里已有一个别的 BepInEx（可能是别的 mod），为了不弄坏它，跳过。" -ForegroundColor Yellow
+            $bad.Add($game + "（已有其它 mod）")
+            continue
+        }
+        Write-Host "    检测到旧版汉化，会就地更新。" -ForegroundColor DarkGray
     }
-    Write-Host "  检测到旧版汉化，会就地更新。" -ForegroundColor DarkGray
+
+    $probe = Join-Path $game ('.cn_write_test_' + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    $canWrite = $true
+    try {
+        Set-Content -LiteralPath $probe -Value 'x' -ErrorAction Stop
+        Remove-Item -LiteralPath $probe -Force
+    } catch { $canWrite = $false }
+    if (-not $canWrite) {
+        Write-Host "    没有写入权限（可能在 Program Files），跳过。" -ForegroundColor Red
+        Write-Host "    需要的话：关掉本窗口，右键 安装汉化.bat -> 以管理员身份运行。" -ForegroundColor Yellow
+        $bad.Add($game + "（没有写入权限）")
+        continue
+    }
+
+    Write-Host "    正在复制文件…" -NoNewline
+    try {
+        Copy-Item (Join-Path $here 'winhttp.dll') $game -Force -ErrorAction Stop
+        Copy-Item (Join-Path $here 'doorstop_config.ini') $game -Force -ErrorAction Stop
+        Copy-Item (Join-Path $here '.doorstop_version') $game -Force -ErrorAction Stop
+        Copy-Item (Join-Path $here 'BepInEx') $game -Recurse -Force -ErrorAction Stop
+    } catch {
+        Write-Host " 失败" -ForegroundColor Red
+        Write-Host ("    原因: {0}" -f $_.Exception.Message)
+        Write-Host "    常见原因: 杀毒软件拦截 / 游戏正在运行 / 磁盘空间不足。"
+        $bad.Add($game + "（复制失败）")
+        continue
+    }
+
+    $dll = Join-Path $game 'BepInEx\plugins\PigfaceCN\PigfaceCN.dll'
+    $dict = Join-Path $game 'BepInEx\plugins\PigfaceCN\zh.tsv'
+    if ((Test-Path $dll) -and (Test-Path $dict)) {
+        Write-Host " 完成" -ForegroundColor Green
+        $ok.Add($game)
+    } else {
+        Write-Host " 校验失败" -ForegroundColor Red
+        $bad.Add($game + "（复制后校验失败）")
+    }
 }
 
-# write test: the game may live under Program Files, where a normal double-click has no rights
-$probe = Join-Path $game ('.cn_write_test_' + [guid]::NewGuid().ToString('N').Substring(0, 8))
-try {
-    Set-Content -LiteralPath $probe -Value 'x' -ErrorAction Stop
-    Remove-Item -LiteralPath $probe -Force
-} catch {
-    Write-Host ""
-    Write-Host "  没有写入权限，安装已取消。" -ForegroundColor Red
-    Write-Host "  这个游戏目录在受保护的位置（比如 C:\Program Files）。"
-    Write-Host "  请关掉这个窗口，右键 安装汉化.bat -> 以管理员身份运行。"
-    Write-Host ""
-    Read-Host "  按回车关闭"
-    exit 1
+# 记住最后一个安装成功的目录，供 检查缺词 / 卸载 参考
+if ($ok.Count -gt 0) {
+    Set-Content -LiteralPath (Join-Path $here 'game_path.txt') -Value $ok[$ok.Count - 1] -Encoding UTF8
 }
 
-Write-Host "  正在复制文件..." -NoNewline
-try {
-    Copy-Item (Join-Path $here 'winhttp.dll') $game -Force -ErrorAction Stop
-    Copy-Item (Join-Path $here 'doorstop_config.ini') $game -Force -ErrorAction Stop
-    Copy-Item (Join-Path $here '.doorstop_version') $game -Force -ErrorAction Stop
-    Copy-Item (Join-Path $here 'BepInEx') $game -Recurse -Force -ErrorAction Stop
-} catch {
+Write-Host ""
+if ($ok.Count -gt 0) {
+    Write-Host ("  安装成功 {0} 份：" -f $ok.Count) -ForegroundColor Green
+    foreach ($g in $ok) { Write-Host ("   - {0}" -f $g) -ForegroundColor Green }
     Write-Host ""
-    Write-Host "  复制失败，安装没有完成。" -ForegroundColor Red
-    Write-Host "  原因: $($_.Exception.Message)"
-    Write-Host "  常见原因: 杀毒软件拦截 / 游戏正在运行 / 磁盘空间不足。"
-    Write-Host "  处理: 关掉游戏、把杀软弹窗点允许，再重试一次。"
-    Write-Host ""
-    Read-Host "  按回车关闭"
-    exit 1
-}
-Write-Host " 完成" -ForegroundColor Green
-
-$dll = Join-Path $game 'BepInEx\plugins\PigfaceCN\PigfaceCN.dll'
-$dict = Join-Path $game 'BepInEx\plugins\PigfaceCN\zh.tsv'
-if ((Test-Path $dll) -and (Test-Path $dict)) {
-    Write-Host ""
-    Write-Host "  安装成功！" -ForegroundColor Green
-    Write-Host "  以后从 Steam 正常启动游戏就是中文了。" -ForegroundColor Green
+    Write-Host "  以后从 Steam 正常启动游戏就是中文了。"
     Write-Host ""
     Write-Host "  项目主页：https://github.com/box-26/PIGFACE-zh" -ForegroundColor Cyan
     Write-Host '  漏翻/错译请到上面的 Issues 反馈：双击 检查缺词.bat 生成 缺词报告.txt 附上即可。' -ForegroundColor DarkGray
+}
+if ($bad.Count -gt 0) {
+    Write-Host ""
+    Write-Host ("  没有装成 {0} 份：" -f $bad.Count) -ForegroundColor Yellow
+    foreach ($b in $bad) { Write-Host ("   - {0}" -f $b) -ForegroundColor Yellow }
+}
+
+if ($ok.Count -eq 1) {
     Write-Host ""
     $ans = Read-Host "  现在启动游戏看看？(Y/N)"
-    if ($ans -match '^(y|Y)') { Start-Process (Join-Path $game 'Pigface.exe') }
-} else {
-    Write-Host ""
-    Write-Host "  复制似乎没成功，请把上面的内容截图发给对方。" -ForegroundColor Red
+    if ($ans -match '^(y|Y)') { Start-Process (Join-Path $ok[0] 'Pigface.exe') }
 }
 
 Write-Host ""

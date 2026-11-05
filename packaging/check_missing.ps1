@@ -1,83 +1,25 @@
-﻿param([string]$GamePath)
+﻿param([string]$GamePath, [switch]$All)
 $ErrorActionPreference = 'Stop'
+$here = $PSScriptRoot
+. (Join-Path $here 'Pigface.Common.ps1')
 
-function Find-Pigface {
-    param([string]$Hint)
+Write-Host ""
+Write-Host "  PIGFACE 中文汉化 - 缺词检查" -ForegroundColor Cyan
+Write-Host "  ----------------------------------------" -ForegroundColor DarkGray
 
-    $cands = New-Object System.Collections.ArrayList
-    $add = {
-        param($dir)
-        if (-not $dir) { return }
-        if (-not (Test-Path (Join-Path $dir 'Pigface.exe'))) { return }
-        try { $full = (Resolve-Path -LiteralPath $dir).Path } catch { return }
-        if (-not ($cands -contains $full)) { [void]$cands.Add($full) }
-    }
-
-    if ($Hint) { & $add $Hint }
-    $gp = Join-Path $PSScriptRoot 'game_path.txt'
-    if (Test-Path $gp) {
-        $t = (Get-Content -LiteralPath $gp -Encoding UTF8 | Select-Object -First 1).Trim()
-        if ($t) { & $add $t }
-    }
-    foreach ($c in @('E:\SteamLibrary\steamapps\common\PIGFACE','D:\SteamLibrary\steamapps\common\PIGFACE','C:\SteamLibrary\steamapps\common\PIGFACE','C:\Program Files (x86)\Steam\steamapps\common\PIGFACE','C:\Program Files\Steam\steamapps\common\PIGFACE')) {
-        & $add $c
-    }
-    foreach ($k in @('HKCU:\Software\Valve\Steam','HKLM:\SOFTWARE\WOW6432Node\Valve\Steam','HKLM:\SOFTWARE\Valve\Steam')) {
-        try {
-            $sp = (Get-ItemProperty -Path $k -ErrorAction Stop).SteamPath
-            if ($sp) {
-                $sp = $sp -replace '/','\'
-                & $add (Join-Path $sp 'steamapps\common\PIGFACE')
-                $vdf = Join-Path $sp 'steamapps\libraryfolders.vdf'
-                if (Test-Path $vdf) {
-                    foreach ($m in [regex]::Matches((Get-Content $vdf -Raw), '"path"\s+"([^"]+)"')) {
-                        $lib = $m.Groups[1].Value -replace '\\\\','\'
-                        & $add (Join-Path $lib 'steamapps\common\PIGFACE')
-                    }
-                }
-            }
-        } catch { }
-    }
-    $seen = 0
-    foreach ($d in [System.IO.DriveInfo]::GetDrives()) {
-        if ($d.DriveType -ne 'Fixed' -and $d.DriveType -ne 'Removable') { continue }
-        $root = $d.RootDirectory.FullName
-        foreach ($sub in @('SteamLibrary\steamapps\common\PIGFACE','Steam\steamapps\common\PIGFACE','Program Files (x86)\Steam\steamapps\common\PIGFACE','Program Files\Steam\steamapps\common\PIGFACE','Games\PIGFACE','PIGFACE')) {
-            & $add (Join-Path $root $sub)
-        }
-        try {
-            foreach ($hit in (Get-ChildItem -LiteralPath $root -Directory -Depth 2 -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'PIGFACE*' })) {
-                $seen++
-                if ($seen -gt 4000) { break }
-                & $add $hit.FullName
-            }
-        } catch { }
-    }
-
-    if ($cands.Count -eq 0) { return $null }
-
-    $scored = foreach ($c in $cands) {
-        $miss = Join-Path $c 'BepInEx\PigfaceCN\miss.log'
-        $log  = Join-Path $c 'BepInEx\LogOutput.log'
-        $has = -1; $t = [datetime]::MinValue
-        if (Test-Path $miss) { $has = 1; $t = (Get-Item $miss).LastWriteTime }
-        elseif (Test-Path $log) { $has = 0; $t = (Get-Item $log).LastWriteTime }
-        $isSteam = if ($c -match '\\steamapps\\common\\') { 1 } else { 0 }
-        [pscustomobject]@{ Path = $c; Has = $has; Time = $t; Steam = $isSteam }
-    }
-    $best = $scored | Sort-Object -Property @{ Expression = 'Has'; Descending = $true }, @{ Expression = 'Time'; Descending = $true }, @{ Expression = 'Steam'; Descending = $true } | Select-Object -First 1
-    if ($scored.Count -gt 1) {
-        Write-Host ("  机器上有 {0} 份 PIGFACE，用的是最近玩过的那份：" -f $scored.Count)
-        Write-Host ("  {0}" -f $best.Path)
-    }
-    return $best.Path
-}
-
-$GamePath = Find-Pigface $GamePath
-if (-not $GamePath) {
+$targets = @(Resolve-PigfaceTargets -Hint $GamePath -MemoFile (Join-Path $here 'game_path.txt') -All:$All)
+if ($targets.Count -eq 0) {
     Write-Host "  没找到游戏目录，请粘贴 PIGFACE 的安装路径：" -ForegroundColor Yellow
-    $GamePath = (Read-Host "  路径").Trim().Trim('"')
+    $p = (Read-Host "  路径").Trim().Trim('"')
+    if ($p) { $targets = @($p) }
 }
+if ($targets.Count -eq 0) {
+    Write-Host "  没有可检查的目录。" -ForegroundColor Red
+    Read-Host "  按回车关闭"
+    exit 1
+}
+
+function New-Report([string]$GamePath) {
 $miss = Join-Path $GamePath 'BepInEx\PigfaceCN\miss.log'
 $dict = Join-Path $GamePath 'BepInEx\plugins\PigfaceCN\zh.tsv'
 if (-not (Test-Path $dict)) { $dict = Join-Path $GamePath 'BepInEx\PigfaceCN\zh.tsv' }
@@ -250,18 +192,37 @@ $out.Add('')
 $out.Add('---- 原始 miss.log ----')
 foreach ($e in $entries) { $out.Add("$($e[0])`t$($e[1])") }
 
+return [pscustomobject]@{ Lines = $out; Count = $byText.Count; Dict = $dictCount; Ver = $ver; Game = $GamePath }
+}
+
+$reports = New-Object System.Collections.Generic.List[object]
+foreach ($g in $targets) { $reports.Add((New-Report -GamePath $g)) }
+
+$merged = New-Object System.Collections.Generic.List[string]
+foreach ($r in $reports) {
+    if ($reports.Count -gt 1) {
+        $merged.Add("################  这一份：$($r.Game)  ################")
+        $merged.Add('')
+    }
+    foreach ($line in $r.Lines) { $merged.Add($line) }
+    $merged.Add('')
+}
+
 $save = Join-Path $PSScriptRoot '缺词报告.txt'
 try {
-    [System.IO.File]::WriteAllLines($save, $out, (New-Object System.Text.UTF8Encoding($true)))
+    [System.IO.File]::WriteAllLines($save, $merged, (New-Object System.Text.UTF8Encoding($true)))
 } catch {
-    $save = Join-Path $GamePath 'BepInEx\PigfaceCN\缺词报告.txt'
-    [System.IO.File]::WriteAllLines($save, $out, (New-Object System.Text.UTF8Encoding($true)))
+    $save = Join-Path $PSScriptRoot ('缺词报告_' + [guid]::NewGuid().ToString('N').Substring(0, 6) + '.txt')
+    [System.IO.File]::WriteAllLines($save, $merged, (New-Object System.Text.UTF8Encoding($true)))
 }
 
 Write-Host ''
-Write-Host ("  补丁 v" + $ver + "，词库 " + $dictCount + " 条") -ForegroundColor DarkGray
-Write-Host ("  发现 " + $byText.Count + " 条没翻译的句子") -ForegroundColor Cyan
-Write-Host ("  报告已保存到：" + $save) -ForegroundColor Green
+foreach ($r in $reports) {
+    Write-Host ("  补丁 v{0}，词库 {1} 条" -f $r.Ver, $r.Dict) -ForegroundColor DarkGray
+    if ($reports.Count -gt 1) { Write-Host ("  {0}" -f $r.Game) -ForegroundColor DarkGray }
+    Write-Host ("  发现 {0} 条没翻译的句子" -f $r.Count) -ForegroundColor Cyan
+}
+Write-Host ("  报告已保存到：{0}" -f $save) -ForegroundColor Green
 Write-Host '  路径已复制到剪贴板，可以直接粘贴发出去。' -ForegroundColor DarkGray
 Write-Host '  报告不含用户名、电脑名、完整路径等隐私信息；不发也不影响使用。' -ForegroundColor DarkGray
 try { Set-Clipboard -Value $save } catch { }
