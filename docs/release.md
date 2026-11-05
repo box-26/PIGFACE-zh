@@ -64,7 +64,10 @@ packaging/
       PigfaceCN.dll  zh.tsv  frag.tsv  sold.png  font.ttf  OFL.txt
 ```
 
-压缩成 `PIGFACE-汉化-vX.Y.zip`，解压后目录里直接是 `安装汉化.bat`（不要多一层文件夹）。
+压缩成 `PIGFACE-zh-vX.Y.zip`，解压后目录里直接是 `安装汉化.bat`（不要多一层文件夹）。
+
+工作区约定（与本仓库分离）：打包源放 `..\payload\`，产物只放 `..\release\`，
+调试套件放 `..\private\devkit\`，历史 zip 放 `..\archive\`。
 
 ## 6. 自检清单
 

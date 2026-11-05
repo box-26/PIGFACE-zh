@@ -1,6 +1,6 @@
-﻿param(
+param(
     # Folder that will become the zip root. Must contain BepInEx\plugins\PigfaceCN\.
-    [string]$Source = (Join-Path $PSScriptRoot '..\dist'),
+    [string]$Source = (Join-Path $PSScriptRoot '..\..\payload\PIGFACE-汉化'),
     # Output zip. Default: out\PIGFACE-zh.zip next to this repo.
     [string]$Out    = (Join-Path $PSScriptRoot '..\out\PIGFACE-zh.zip')
 )
