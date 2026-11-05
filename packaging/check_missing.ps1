@@ -184,7 +184,8 @@ $out.Add('报告不含用户名、电脑名、完整路径和存档内容。')
 $out.Add('')
 $out.Add('—— 原始 miss.log ——')
 foreach ($e in $entries) { $out.Add("$($e[0])`t$($e[1])") }
-return [pscustomobject]@{ Lines = $out; Count = $byText.Count; Dict = $dictCount; Ver = $ver; Game = $GamePath }
+$tag = if (Test-SteamGame $GamePath) { 'Steam 库' } else { '其它位置' }
+return [pscustomobject]@{ Lines = $out; Count = $byText.Count; Dict = $dictCount; Ver = $ver; Game = $GamePath; Tag = $tag }
 }
 
 $reports = New-Object System.Collections.Generic.List[object]
@@ -195,8 +196,7 @@ $merged.Add('PIGFACE 汉化 缺词报告')
 $merged.Add('')
 foreach ($r in $reports) {
     if ($reports.Count -gt 1) {
-        $merged.Add("【第 $($reports.IndexOf($r) + 1) 份】")
-        $merged.Add("路径 $($r.Game)")
+        $merged.Add("【第 $($reports.IndexOf($r) + 1) 份】$($r.Tag)")
         $merged.Add('')
     }
     foreach ($line in ($r.Lines | Select-Object -Skip 2)) { $merged.Add($line) }
