@@ -149,6 +149,7 @@ $out = New-Object System.Collections.Generic.List[string]
 $out.Add('PIGFACE 汉化 缺词报告')
 $out.Add('')
 if (-not $NoEnv) {
+    $out.Add('以下信息来自运行本脚本的这台电脑：')
     $out.Add("系统     $osLine")
     $out.Add("屏幕     $resLine")
     $out.Add("字体     $fontLine")
