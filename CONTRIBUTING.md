@@ -57,4 +57,8 @@
 ## 分支与发版
 
 - `main` 保持可发布状态。
-- 发版流程见 `docs/release.md`。
+
+## 先看这里
+
+当前版本与已知缺口见 Issue #1；
+发版流程见 `docs/release.md`。
